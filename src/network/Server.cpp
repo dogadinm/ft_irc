@@ -59,7 +59,6 @@ void Server::start()
         //                 << ", events: " << _plfds[i].events
         //                 << ", revents: " << _plfds[i].revents << std::endl;
         // }
-        // std::cout << "hello" << std::endl;
         for (plfds_iterator it = _plfds.begin(); it != _plfds.end(); ++it)
         {
             // std::cout << it->revents << std::endl;
@@ -67,7 +66,7 @@ void Server::start()
                 continue;
             }
 
-            // Проверяем разрыв соединения
+            // Checking for a broken connection
             if (it->revents & POLLHUP || it->revents & POLLRDHUP)
             {
                 // std::cout << "POLLRDHUP" << std::endl;
@@ -75,14 +74,14 @@ void Server::start()
                 break;  
             }
 
-            // Обрабатываем входящие данные
+            // Processing incoming data
             if (it->revents & POLLIN)
             {
                 // std::cout << "POLLIN" << std::endl;
                 if (it->fd == _socket)
                 {
                     this->client_connect();
-                    break;  // Прерываем цикл, чтобы вернуться к poll
+                    break;
                 }
                 this->client_message(it->fd); 
             }
@@ -202,14 +201,20 @@ std::string Server::read_message(int fd)
         message.append(buffer);
         
     }
-    size_t pos = message.find('\n');
-
-    if ( pos != std::string::npos)
-        message.erase(pos, 1);
+    message = trim(message);
     return message;
 }
 
-
+std::string     Server::trim(const std::string& str)
+{
+    size_t start = str.find_first_not_of("\t\n\r\f\v");
+    // If string only \t\n\r\f\v
+    if (start == std::string::npos) {
+        return "";
+    }
+    size_t end = str.find_last_not_of("\t\n\r\f\v");
+    return str.substr(start, end - start + 1);
+}
 
 
 

@@ -70,5 +70,7 @@ public:
     void            client_message(int fd);
 
     std::string     read_message(int fd);
+
+    std::string     trim(const std::string& str);
 };
 
