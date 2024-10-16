@@ -43,56 +43,58 @@ int Server::CreateSocket()
     return server_fd; 
 }
 
-void            Server::start()
+void Server::start()
 {
     pollfd srv = {_socket, POLLIN, 0};
     _plfds.push_back(srv);
 
-    std::cout << "Server listening on port " << _port << std::endl;  
+    log("Server listening on port " + _port);
+
     while (_working)
     {
-        if (poll(_plfds.begin().base(), _plfds.size(), -1) < 0)
+        if (poll(_plfds.data(), _plfds.size(), -1) < 0)
             throw std::runtime_error("Error, polling!");
-        
         // for (size_t i = 0; i < _plfds.size(); ++i) {
-        // std::cout << "Index: " << i << ", fd: " << _plfds[i].fd
-        //           << ", events: " << _plfds[i].events
-        //           << ", revents: " << _plfds[i].revents << std::endl;
+        //     std::cout << "Index: " << i << ", fd: " << _plfds[i].fd
+        //                 << ", events: " << _plfds[i].events
+        //                 << ", revents: " << _plfds[i].revents << std::endl;
         // }
-
-        for (plfds_iterator it = _plfds.begin(); it != _plfds.end(); it++)
+        // std::cout << "hello" << std::endl;
+        for (plfds_iterator it = _plfds.begin(); it != _plfds.end(); ++it)
         {
-            if (it->revents == 0)
-                 continue;
-            if ((it->revents & POLLRDHUP ) == POLLRDHUP)
+            // std::cout << it->revents << std::endl;
+            if (it->revents == 0) {
+                continue;
+            }
+
+            // Проверяем разрыв соединения
+            if (it->revents & POLLHUP || it->revents & POLLRDHUP)
             {
                 // std::cout << "POLLRDHUP" << std::endl;
-                this->on_client_disconnect(it->fd);
-                break;
+                client_disconnect(it->fd);
+                break;  
             }
 
-            if ((it->revents & POLLIN) == POLLIN)
+            // Обрабатываем входящие данные
+            if (it->revents & POLLIN)
             {
-                std::cout << "POLLIN" << std::endl;
+                // std::cout << "POLLIN" << std::endl;
                 if (it->fd == _socket)
                 {
-                    this->on_client_connect();
-                    break;
+                    this->client_connect();
+                    break;  // Прерываем цикл, чтобы вернуться к poll
                 }
-
-                this->on_client_message(it->fd);
+                this->client_message(it->fd); 
             }
         }
-
     }
 }
 
-void Server::on_client_connect()
+void Server::client_connect()
 {
     int client_fd;
-    struct sockaddr_in  client_addr;
+    sockaddr_in  client_addr;
     socklen_t client_addr_len = sizeof(client_addr);
-
 
     // Accept client fd
     client_fd = accept(_socket, (struct sockaddr *)&client_addr, &client_addr_len);
@@ -107,27 +109,34 @@ void Server::on_client_connect()
 
     // Getting hostname from the client address
     char hostname[NI_MAXHOST];
-    int res = getnameinfo((struct sockaddr *) &client_addr, sizeof(client_addr), hostname, NI_MAXHOST, NULL, 0, NI_NUMERICSERV);
+    char service[NI_MAXSERV];
+    int res = getnameinfo((sockaddr *) &client_addr, sizeof(client_addr), hostname, NI_MAXHOST, service, NI_MAXSERV, NI_NUMERICSERV);
     if (res != 0)
         throw std::runtime_error("Error, getting a hostname!");\
+   
+    std::string host_str(hostname);
+    std::string serv_str(service);
 
-        
-    std::string str(hostname);
-    uint16_t t = ntohs(client_addr.sin_port); // port ?
+    // uint16_t cln_port = ntohs(client_addr.sin_port); // port 
 
-    // doesnt make
+
+
+    // isnt done
     // Client* client = new Client(fd, ntohs(addr.sin_port), hostname);
     
-    _clients.insert(std::make_pair(client_fd, t));
-    std::cout << "Client connected" << std::endl;
+    _clients.insert(std::make_pair(client_fd, serv_str));
+    log(host_str + ":" + serv_str + " connected");
 }
 
-void Server::on_client_disconnect(int fd)
+void Server::client_disconnect(int fd)
 {
     try
     {
         // need to make leave from the channel when user exit
-
+        if (_clients.find(fd) == _clients.end())
+            return;
+        std::string clientData = _clients.at(fd);
+        log(clientData + " disconnected");
         
         _clients.erase(fd);
         for(plfds_iterator it_b = _plfds.begin(); it_b != _plfds.end(); ++it_b)
@@ -139,7 +148,7 @@ void Server::on_client_disconnect(int fd)
                 break;
             }
         }
-        std::cout << "Client disconnected" << std::endl;
+        
     
     }
     catch(const std::exception& e)
@@ -150,16 +159,19 @@ void Server::on_client_disconnect(int fd)
 
 }
 
-void Server::on_client_message(int fd)
+void Server::client_message(int fd)
 {
 
     try
     {
         // Client*     client = _clients.at(fd);
        
-        uint16_t clientData = _clients.at(fd);
+        std::string clientData = _clients.at(fd);
         std::string message = this->read_message(fd);
-        std::cout << clientData << ": " << message << std::endl;
+        if (message == "QUIT")    
+            client_disconnect(fd); 
+              
+        log(clientData + ": " + message);
         
         // _parser->invoke(client, message);
     }
@@ -184,13 +196,16 @@ std::string Server::read_message(int fd)
         if ((bytes_read < 0))
             throw std::runtime_error("Error while reading buffer from a client!");
         if (bytes_read == 0) {
-            on_client_disconnect(fd);
-            return "";
+            return "QUIT";
         }
         buffer[bytes_read] = '\0';
         message.append(buffer);
+        
     }
+    size_t pos = message.find('\n');
 
+    if ( pos != std::string::npos)
+        message.erase(pos, 1);
     return message;
 }
 

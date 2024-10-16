@@ -11,7 +11,7 @@
 #include <iostream>
 #include <stdexcept>
 #include <fcntl.h>
-#include <string> 
+#include <string>
 
 
 #include <algorithm>
@@ -24,7 +24,10 @@
 #include <unistd.h>
 #include <iostream>
 #include <cstring>
+#include <sstream>
 
+
+#include "../log.hpp"
 // #include "Client.hpp"
 // #include "Channel.hpp"
 
@@ -41,7 +44,7 @@ private:
 
     std::vector<pollfd> _plfds;
     // std::vector<Channel *>  _channels;
-    std::map<int, uint16_t> _clients;
+    std::map<int, std::string> _clients;
 
     Server();
     Server(Server const & copy);
@@ -62,9 +65,9 @@ public:
     std::string get_pass() const;
     
     // Handle Clients
-    void            on_client_connect();
-    void            on_client_disconnect(int fd);
-    void            on_client_message(int fd);
+    void            client_connect();
+    void            client_disconnect(int fd);
+    void            client_message(int fd);
 
     std::string     read_message(int fd);
 };
