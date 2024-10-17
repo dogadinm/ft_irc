@@ -107,13 +107,13 @@ class Pass : public Command
 //         void execute(Client* client, std::vector<std::string> args);
 // };
 
-// class Quit : public Command
-// {
-//     public:
-//         Quit(Server* srv, bool auth);
-//         ~Quit();    
-//         void execute(Client* client, std::vector<std::string> args);
-// };
+class Quit : public Command
+{
+    public:
+        Quit(Server* srv, bool auth);
+        ~Quit();    
+        void execute(Client* client, std::vector<std::string> args);
+};
 
 // class User : public Command
 // {

@@ -6,7 +6,7 @@ Parser::Parser(Server* srv): _srv(srv)
     _commands["PASS"] = new Pass(_srv, false);
     // _commands["NICK"] = new Nick(_srv, false);
     // _commands["USER"] = new User(_srv, false);
-    // _commands["QUIT"] = new Quit(_srv, false);
+    _commands["QUIT"] = new Quit(_srv, false);
 
     // _commands["PING"] = new Ping(_srv);
     // _commands["PONG"] = new Pong(_srv);

@@ -166,6 +166,8 @@ void Server::client_message(int fd)
 
     try
     {
+        if (_clients.find(fd) == _clients.end())
+            return;
         Client*     client = _clients.at(fd);
        
         std::string message = this->read_message(fd);
@@ -226,6 +228,5 @@ Client*         Server::get_client(const std::string& nickname)
         if (!nickname.compare(it->second->get_nickname()))
             return it->second; 
     }
-
     return NULL;
 }
