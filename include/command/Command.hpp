@@ -22,6 +22,9 @@ class Command
         virtual void execute(Client* client, std::vector<std::string> args) = 0;
 };
 
+
+// Command classes
+
 class Notice : public Command
 {
     public:

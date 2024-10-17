@@ -11,13 +11,15 @@
 
 class Parser
 {
+    typedef std::map<std::string, Command *>::iterator comm_iter;
+
     private:
         Server* _srv;
         std::map<std::string, Command *> _commands;
 
         std::string     trim(const std::string& str);
     public:
-        Parser(server* srv);
+        Parser(Server* srv);
         ~Parser();
 
         void invoke(Client* client, const std::string& message);

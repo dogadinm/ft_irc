@@ -201,7 +201,6 @@ std::string Server::read_message(int fd)
         message.append(buffer);
         
     }
-    message = trim(message);
     return message;
 }
 
@@ -216,3 +215,15 @@ Server::~Server()
 
 
 std::string Server::get_pass() const    { return _pass; }
+
+
+Client*         Server::get_client(const std::string& nickname)
+{
+    for (client_iterator it = _clients.begin(); it != _clients.end(); ++it)
+    {
+        if (!nickname.compare(it->second->get_nickname()))
+            return it->second; 
+    }
+
+    return NULL;
+}

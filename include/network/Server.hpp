@@ -28,12 +28,16 @@
 
 
 #include "../log.hpp"
-// #include "Client.hpp"
+#include "Client.hpp"
+#include "../command/Parser.hpp"
+
 // #include "Channel.hpp"
+#define MAX_CONNECTIONS 999
 
 class Server
 {
-     typedef std::vector<pollfd>::iterator       plfds_iterator;
+    typedef std::vector<pollfd>::iterator       plfds_iterator;
+    typedef std::map<int, Client *>::iterator   client_iterator;
 private:
     int _working;
     int _socket;
@@ -44,7 +48,9 @@ private:
 
     std::vector<pollfd> _plfds;
     // std::vector<Channel *>  _channels;
-    std::map<int, std::string> _clients;
+    std::map<int, Client *> _clients;
+
+    Parser*                 _parser;
 
     Server();
     Server(Server const & copy);
@@ -63,6 +69,7 @@ public:
 
     // Getters
     std::string get_pass() const;
+    Client*         get_client(const std::string &nickname);
     
     // Handle Clients
     void            client_connect();
