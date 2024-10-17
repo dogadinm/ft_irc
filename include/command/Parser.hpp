@@ -7,6 +7,8 @@
 #include <vector>
 #include <map>
 
+class Parser;
+
 #include "Command.hpp"
 
 class Parser

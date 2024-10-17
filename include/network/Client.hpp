@@ -21,7 +21,7 @@
 
 class Client;
 
-#include "Channel.hpp"
+// #include "Channel.hpp"
 #include "../log.hpp"
 
 
@@ -47,7 +47,7 @@ class Client
         std::string     _hostname;
 
         ClientState     _state;
-        Channel*        _channel;
+        // Channel*        _channel;
 
         Client();
         Client(const Client &src);
@@ -63,7 +63,7 @@ class Client
         /* Getters */
 
         int             get_fd() const;
-        int             get_port() const;
+        std::string     get_port() const;
 
         std::string     get_nickname() const;
         std::string     get_username() const;
@@ -71,7 +71,7 @@ class Client
         std::string     get_hostname() const;
         std::string     get_prefix() const;
 
-        Channel*        get_channel() const;
+        // Channel*        get_channel() const;
 
     
         /* Setters */
@@ -80,7 +80,7 @@ class Client
         void            set_username(const std::string &username);
         void            set_realname(const std::string &realname);
         void            set_state(ClientState state);
-        void            set_channel(Channel *channel);
+        // void            set_channel(Channel *channel);
 
 
         /* Check state */
@@ -98,8 +98,8 @@ class Client
 
         /* Client Actions */
 
-        void            join(Channel *channel);
-        void            leave();
+        // void            join(Channel *channel);
+        // void            leave();
 };
 
 #endif

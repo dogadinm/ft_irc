@@ -4,6 +4,7 @@ Server::Server(const std::string &port, const std::string &pass) : _host("127.0.
 {
     _working = 1;
     _socket = CreateSocket();
+    _parser = new Parser(this);
 }
 
 int Server::CreateSocket()
@@ -120,10 +121,11 @@ void Server::client_connect()
 
 
 
-    // isnt done
-    // Client* client = new Client(fd, ntohs(addr.sin_port), hostname);
     
-    _clients.insert(std::make_pair(client_fd, serv_str));
+    Client* client = new Client(client_fd, serv_str, host_str);
+    _clients.insert(std::make_pair(client_fd, client));
+
+    // _clients.insert(std::make_pair(client_fd, serv_str));
     log(host_str + ":" + serv_str + " connected");
 }
 
@@ -131,24 +133,25 @@ void Server::client_disconnect(int fd)
 {
     try
     {
+        
         // need to make leave from the channel when user exit
         if (_clients.find(fd) == _clients.end())
             return;
-        std::string clientData = _clients.at(fd);
-        log(clientData + " disconnected");
+        Client* client = _clients.at(fd);    
+        // std::string clientData = _clients.at(fd);
+        log(client->get_hostname() + " : " + client->get_port() + " disconnected");
         
         _clients.erase(fd);
-        for(plfds_iterator it_b = _plfds.begin(); it_b != _plfds.end(); ++it_b)
+        for(plfds_iterator it = _plfds.begin(); it != _plfds.end(); ++it)
         {
-            if (it_b->fd == fd)
+            if (it->fd == fd)
             {
-                _plfds.erase(it_b);
+                _plfds.erase(it);
                 close(fd);
                 break;
             }
         }
-        
-    
+        delete client;
     }
     catch(const std::exception& e)
     {
@@ -163,16 +166,15 @@ void Server::client_message(int fd)
 
     try
     {
-        // Client*     client = _clients.at(fd);
+        Client*     client = _clients.at(fd);
        
-        std::string clientData = _clients.at(fd);
         std::string message = this->read_message(fd);
-        if (message == "QUIT")    
-            client_disconnect(fd); 
+        // if (message == "QUIT")    
+        //     client_disconnect(fd); 
               
-        log(clientData + ": " + message);
+        // log(clientData + ": " + message);
         
-        // _parser->invoke(client, message);
+        _parser->invoke(client, message);
     }
     catch (const std::exception& e) 
     {

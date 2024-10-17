@@ -4,19 +4,19 @@
 Parser::Parser(Server* srv): _srv(srv)
 {
     _commands["PASS"] = new Pass(_srv, false);
-    _commands["NICK"] = new Nick(_srv, false);
-    _commands["USER"] = new User(_srv, false);
-    _commands["QUIT"] = new Quit(_srv, false);
+    // _commands["NICK"] = new Nick(_srv, false);
+    // _commands["USER"] = new User(_srv, false);
+    // _commands["QUIT"] = new Quit(_srv, false);
 
-    _commands["PING"] = new Ping(_srv);
-    _commands["PONG"] = new Pong(_srv);
-    _commands["JOIN"] = new Join(_srv);
-    _commands["PART"] = new Part(_srv);
-    _commands["KICK"] = new Kick(_srv);
-    _commands["MODE"] = new Mode(_srv);
+    // _commands["PING"] = new Ping(_srv);
+    // _commands["PONG"] = new Pong(_srv);
+    // _commands["JOIN"] = new Join(_srv);
+    // _commands["PART"] = new Part(_srv);
+    // _commands["KICK"] = new Kick(_srv);
+    // _commands["MODE"] = new Mode(_srv);
 
-	_commands["PRIVMSG"] = new PrivMsg(_srv);
-	_commands["NOTICE"] = new Notice(_srv);  
+	// _commands["PRIVMSG"] = new PrivMsg(_srv);
+	// _commands["NOTICE"] = new Notice(_srv);  
 }
 
 Parser::~Parser()
