@@ -38,7 +38,7 @@ int Server::CreateSocket()
         throw std::runtime_error("Error, binding socket");
 
     // Listen for incoming connections
-    if (listen(server_fd, 5) < 0)
+    if (listen(server_fd, MAX_CONNECTIONS) < 0)
         throw std::runtime_error("Error, listening socket");
 
     return server_fd; 
@@ -212,9 +212,10 @@ std::string Server::read_message(int fd)
 
 Server::~Server()
 {
-    if (_socket >= 0) {
+    if (_socket >= 0) 
         close(_socket);
-    }
+
+    delete _parser;
 }
 
 

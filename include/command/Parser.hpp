@@ -16,7 +16,7 @@ class Parser
     typedef std::map<std::string, Command *>::iterator comm_iter;
 
     private:
-        Server* _srv;
+        Server* _server;
         std::map<std::string, Command *> _commands;
 
         std::string     trim(const std::string& str);

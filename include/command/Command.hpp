@@ -9,13 +9,13 @@ class Command;
 class Command
 {
     protected:
-        Server* _srv;
+        Server* _server;
         bool _auth;
 
         Command();
         Command(Command const & copy);
     public:
-        explicit Command(Server* srv, bool auth = true);
+        explicit Command(Server* server, bool auth = true);
         virtual ~Command();
 
         bool get_auth() const;
@@ -29,7 +29,7 @@ class Command
 // class Notice : public Command
 // {
 //     public:
-//         Notice(Server* srv);
+//         Notice(Server* server);
 //         ~Notice();    
 //         void execute(Client* client, std::vector<std::string> args);
 // };
@@ -37,7 +37,7 @@ class Command
 // class Join : public Command
 // {
 //     public:
-//         Join(Server* srv);
+//         Join(Server* server);
 //         ~Join();    
 //         void execute(Client* client, std::vector<std::string> args);
 // };
@@ -45,7 +45,7 @@ class Command
 // class Kick : public Command
 // {
 //     public:
-//         Kick(Server* srv);
+//         Kick(Server* server);
 //         ~Kick();    
 //         void execute(Client* client, std::vector<std::string> args);
 // };
@@ -53,24 +53,24 @@ class Command
 // class Mode : public Command
 // {
 //     public:
-//         Mode(Server* srv);
+//         Mode(Server* server);
 //         ~Mode();    
 //         void execute(Client* client, std::vector<std::string> args);
 // };
 
-// class Nick : public Command
-// {
-//     public:
-//         Nick(Server* srv, bool auth);
-//         ~Nick();    
-//         void execute(Client* client, std::vector<std::string> args);
-// };
+class Nick : public Command
+{
+    public:
+        Nick(Server* server, bool auth);
+        ~Nick();    
+        void execute(Client* client, std::vector<std::string> args);
+};
 
 
 // class Part : public Command
 // {
 //     public:
-//         Part(Server* srv);
+//         Part(Server* server);
 //         ~Part();    
 //         void execute(Client* client, std::vector<std::string> args);
 // };
@@ -78,7 +78,7 @@ class Command
 class Pass : public Command
 {
     public:
-        Pass(Server* srv, bool auth);
+        Pass(Server* server, bool auth);
         ~Pass();    
         void execute(Client* client, std::vector<std::string> args);
 };
@@ -86,7 +86,7 @@ class Pass : public Command
 // class Ping : public Command
 // {
 //     public:
-//         Ping(Server* srv);
+//         Ping(Server* server);
 //         ~Ping();    
 //         void execute(Client* client, std::vector<std::string> args);
 // };
@@ -94,7 +94,7 @@ class Pass : public Command
 // class Pong : public Command
 // {
 //     public:
-//         Pong(Server* srv);
+//         Pong(Server* server);
 //         ~Pong();    
 //         void execute(Client* client, std::vector<std::string> args);
 // };
@@ -102,7 +102,7 @@ class Pass : public Command
 // class PrivMsg : public Command
 // {
 //     public:
-//         PrivMsg(Server* srv);
+//         PrivMsg(Server* server);
 //         ~PrivMsg();    
 //         void execute(Client* client, std::vector<std::string> args);
 // };
@@ -110,18 +110,18 @@ class Pass : public Command
 class Quit : public Command
 {
     public:
-        Quit(Server* srv, bool auth);
+        Quit(Server* server, bool auth);
         ~Quit();    
         void execute(Client* client, std::vector<std::string> args);
 };
 
-// class User : public Command
-// {
-//     public:
-//         User(Server* srv, bool auth);
-//         ~User();    
-//         void execute(Client* client, std::vector<std::string> args);
-// };
+class User : public Command
+{
+    public:
+        User(Server* server, bool auth);
+        ~User();    
+        void execute(Client* client, std::vector<std::string> args);
+};
 
 
 

@@ -5,7 +5,7 @@
 /* Constructor and Destructor */
 
 Client::Client(int fd, const std::string &port, const std::string &hostname)  // port as std::string
-    : _fd(fd), _port(port), _hostname(hostname), _state(HANDSHAKE) //, _channel(NULL)
+    : _fd(fd), _port(port), _hostname(hostname), _state(PASS) //, _channel(NULL)
 {
 
 }
@@ -27,6 +27,7 @@ std::string     Client::get_nickname() const { return _nickname; }
 std::string     Client::get_username() const { return _username; }
 std::string     Client::get_realname() const { return _realname; }
 std::string     Client::get_hostname() const { return _hostname; }
+ClientState     Client::get_state() const { return _state; }
 
 std::string     Client::get_prefix() const
 {
@@ -72,14 +73,15 @@ void            Client::reply(const std::string& reply)
 
 void            Client::welcome()
 {
-    if (_state != LOGIN || _username.empty() || _realname.empty() || _nickname.empty())
-        return;
+    // if (_state != REGISTERED || _username.empty() || _realname.empty() || _nickname.empty())\
+    //    return; 
+        
 
-    _state = REGISTERED;
+    // _state = REGISTERED;
     this->reply(RPL_WELCOME(_nickname));
 
     char message[150];  // Increased size to account for string port
-    sprintf(message, "%s:%s is now known as %s.", _hostname.c_str(), _port.c_str(), _nickname.c_str());  // Using %s for port
+    sprintf(message, "%s:%s is now known as %s.", _hostname.c_str(), _port.c_str(), _username.c_str());  // Using %s for port
     log(message);
 }
 

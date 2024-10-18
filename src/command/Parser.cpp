@@ -1,12 +1,12 @@
 #include "../../include/command/Parser.hpp"
 
 
-Parser::Parser(Server* srv): _srv(srv)
+Parser::Parser(Server* server): _server(server)
 {
-    _commands["PASS"] = new Pass(_srv, false);
-    // _commands["NICK"] = new Nick(_srv, false);
-    // _commands["USER"] = new User(_srv, false);
-    _commands["QUIT"] = new Quit(_srv, false);
+    _commands["PASS"] = new Pass(_server, false);
+    _commands["NICK"] = new Nick(_server, false);
+    _commands["USER"] = new User(_server, false);
+    _commands["QUIT"] = new Quit(_server, false);
 
     // _commands["PING"] = new Ping(_srv);
     // _commands["PONG"] = new Pong(_srv);
@@ -56,16 +56,22 @@ void Parser::invoke(Client* client, const std::string& message)
         try
         {
             Command *cmd = _commands.at(name);
+
             while (line >> buf)
                 args.push_back(buf);
 
-            /// write check on registration
+            // registartion check
+            if (!client->is_registered() && cmd->get_auth())
+            {
+                client->reply(ERR_NOTREGISTERED(client->get_nickname()));
+                return;
+            }
             cmd->execute(client, args);
             
         }
         catch(const std::exception& e)
         {
-            std::cerr << e.what() << '\n';
+           client->reply(ERR_UNKNOWNCOMMAND(client->get_nickname(), name));
         }
         
     }

@@ -31,12 +31,16 @@ void    Pass::execute(Client* client, std::vector<std::string> args)
         client->reply(ERR_ALREADYREGISTERED(client->get_nickname()));
         return;
     }
-
-    if (_srv->get_pass() != args[0].substr(args[0][0] == ':' ? 1 : 0))
+    if (client->get_state() == UNAUTHENTICATED)
+    {
+        client->reply("You alredy enter password");
+        return;   
+    }
+    if (_server->get_pass() != args[0].substr(args[0][0] == ':' ? 1 : 0))
     {
         client->reply(ERR_PASSWDMISMATCH(client->get_nickname()));
         return;
     }
 
-    client->set_state(LOGIN);
+    client->set_state(UNAUTHENTICATED);
 }

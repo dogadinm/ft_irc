@@ -26,5 +26,5 @@ void    Quit::execute(Client* client, std::vector<std::string> args)
         reason = reason.substr(1);
 
     client->write(RPL_QUIT(client->get_prefix(), reason));
-	_srv->client_disconnect(client->get_fd());
+	_server->client_disconnect(client->get_fd());
 }

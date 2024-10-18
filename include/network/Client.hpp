@@ -27,8 +27,9 @@ class Client;
 
 enum ClientState
 {
-    HANDSHAKE,
-    LOGIN,
+    PASS,
+    UNAUTHENTICATED,
+    AUTHENTICATED,
     REGISTERED,
     DISCONNECTED
 };
@@ -39,7 +40,7 @@ class Client
     private:
         
         int             _fd;
-        std::string             _port;
+        std::string     _port;
 
         std::string     _nickname;
         std::string     _username;
@@ -70,6 +71,7 @@ class Client
         std::string     get_realname() const;
         std::string     get_hostname() const;
         std::string     get_prefix() const;
+        ClientState     get_state() const;
 
         // Channel*        get_channel() const;
 
