@@ -13,6 +13,7 @@
 #define ERR_ALREADYREGISTERED(source)                   "462 " + source + " :You may not register"
 #define ERR_PASSWDMISMATCH(source)                      "464 " + source + " :Password is incorrect"
 #define ERR_NONICKNAMEGIVEN(source)                     "431 " + source + " :Nickname not given"
+#define ERR_PASSENTERED (source)                        "465 " + source + " :You have already entered the password"
 #define ERR_NICKNAMEINUSE(source)                       "433 " + source + " " + source  + " :Nickname is already in use"
 
 #define ERR_UNKNOWNCOMMAND(source, command)             "421 " + source + " " + command + " :Unknown command"

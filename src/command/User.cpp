@@ -21,16 +21,16 @@ void    User::execute(Client* client, std::vector<std::string> args)
         return;
     }
 
-    if (client->get_state() == PASS)
-    {
-        client->reply("Enter PASS and than NICK and USER");
-        return;   
-    }
-    if (client->get_state() == UNAUTHENTICATED)
-    {
-        client->reply("Enter NICK");
-        return;   
-    }
+    // if (client->get_state() == PASS)
+    // {
+    //     client->reply("Enter PASS and than NICK and USER");
+    //     return;   
+    // }
+    // if (client->get_state() == UNAUTHENTICATED)
+    // {
+    //     client->reply("Enter NICK");
+    //     return;   
+    // }
     // if (client->get_state() == LOGIN)
     // {
     //     client->reply("Enter NICK");
@@ -40,7 +40,7 @@ void    User::execute(Client* client, std::vector<std::string> args)
 
 
 
-    client->set_state(REGISTERED);
+    // client->set_state(REGISTERED);
     client->set_username(args[0]);
     client->set_realname(args[3]);
     client->welcome();

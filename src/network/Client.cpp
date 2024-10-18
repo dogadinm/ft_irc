@@ -5,7 +5,7 @@
 /* Constructor and Destructor */
 
 Client::Client(int fd, const std::string &port, const std::string &hostname)  // port as std::string
-    : _fd(fd), _port(port), _hostname(hostname), _state(PASS) //, _channel(NULL)
+    : _fd(fd), _port(port), _hostname(hostname), _state(UNAUTHENTICATED) //, _channel(NULL)
 {
 
 }
@@ -73,11 +73,11 @@ void            Client::reply(const std::string& reply)
 
 void            Client::welcome()
 {
-    // if (_state != REGISTERED || _username.empty() || _realname.empty() || _nickname.empty())\
-    //    return; 
+    if (_state != AUTHENTICATED || _username.empty() || _realname.empty() || _nickname.empty())\
+       return; 
         
 
-    // _state = REGISTERED;
+    _state = REGISTERED;
     this->reply(RPL_WELCOME(_nickname));
 
     char message[150];  // Increased size to account for string port

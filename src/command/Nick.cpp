@@ -12,11 +12,11 @@ void Nick::execute(Client* client, std::vector<std::string> args)
         client->reply(ERR_NONICKNAMEGIVEN(client->get_nickname()));
         return;
     }
-    if (client->get_state() == PASS)
-    {
-        client->reply("Enter PASS");
-        return;   
-    }
+    // if (client->get_state() == PASS)
+    // {
+    //     client->reply("Enter PASS");
+    //     return;   
+    // }
 
     std::string nickname = args[0];
 
@@ -25,8 +25,8 @@ void Nick::execute(Client* client, std::vector<std::string> args)
         client->reply(ERR_NICKNAMEINUSE(client->get_nickname()));
         return;     
     }
-    if (client->get_state() != REGISTERED )
-        client->set_state(AUTHENTICATED);
+    // if (client->get_state() != REGISTERED )
+    //     client->set_state(AUTHENTICATED);
     client->set_nickname(nickname);
-    // client->welcome();
+    client->welcome();
 }

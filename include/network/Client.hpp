@@ -27,7 +27,7 @@ class Client;
 
 enum ClientState
 {
-    PASS,
+    // PASS,
     UNAUTHENTICATED,
     AUTHENTICATED,
     REGISTERED,
