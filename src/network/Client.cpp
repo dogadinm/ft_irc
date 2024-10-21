@@ -28,6 +28,7 @@ std::string     Client::get_username() const { return _username; }
 std::string     Client::get_realname() const { return _realname; }
 std::string     Client::get_hostname() const { return _hostname; }
 ClientState     Client::get_state() const { return _state; }
+bool            Client::get_admin_access() const {return admin_access; }
 
 std::string     Client::get_prefix() const
 {
@@ -37,7 +38,7 @@ std::string     Client::get_prefix() const
     return _nickname + username + hostname;
 }
 
-// Channel*        Client::get_channel() const { return _channel; }
+Channel*        Client::get_channel() const { return _channel; }
 
 
 /* Setters */
@@ -46,7 +47,8 @@ void            Client::set_nickname(const std::string &nickname) { _nickname = 
 void            Client::set_username(const std::string &username) { _username = username; }
 void            Client::set_realname(const std::string &realname) { _realname = realname; }
 void            Client::set_state(ClientState state) { _state = state; }
-// void            Client::set_channel(Channel *channel) { _channel = channel; }
+void            Client::set_channel(Channel *channel) { _channel = channel; }
+void            Client::set_admin_access(bool status) {admin_access = status; }
 
 
 /* Check State */
@@ -134,3 +136,47 @@ void            Client::welcome()
 //     std::string message = _nickname + " has left the channel " + name;
 //     log(message);
 // }
+
+
+void            Client::join(Channel* channel)
+{
+    channel->add_client(this);
+    _channel = channel;
+
+    // Get users on the channel
+
+    std::string users = "";
+    std::vector<std::string> nicknames = channel->get_nicknames();
+    std::vector<std::string>::iterator it_b = nicknames.begin();
+    std::vector<std::string>::iterator it_e = nicknames.end();
+    while (it_b != it_e)
+    {
+        users.append(*it_b + " ");
+        it_b++;
+    }
+
+    // Send replies
+    
+    reply(RPL_NAMREPLY(_nickname, channel->get_name(), users));
+    reply(RPL_ENDOFNAMES(_nickname, channel->get_name()));
+    channel->broadcast(RPL_JOIN(get_prefix(), channel->get_name()));
+
+    // log
+
+    std::string message = _nickname + " has joined to the channel " + channel->get_name();
+    log(message);
+}
+
+void            Client::leave()
+{
+    if (!_channel)
+        return;
+
+    const std::string name = _channel->get_name();
+
+    _channel->broadcast(RPL_PART(get_prefix(), _channel->get_name()));
+    _channel->remove_client(this);
+
+    std::string message = _nickname + " has left the channel " + name;
+    log(message);
+}

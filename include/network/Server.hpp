@@ -39,6 +39,8 @@ class Server
 {
         typedef std::vector<pollfd>::iterator       plfds_iterator;
         typedef std::map<int, Client *>::iterator   client_iterator;
+        typedef std::vector<Channel *>::iterator    channel_iterator;
+
     private:
         int _working;
         int _socket;
@@ -46,9 +48,11 @@ class Server
         const std::string _port;
         const std::string _pass;
         const std::string _host;
+        const std::string admin_name;
+        const std::string admin_pass;
 
         std::vector<pollfd> _plfds;
-        // std::vector<Channel *>  _channels;
+        std::vector<Channel *>  _channels;
         std::map<int, Client *> _clients;
 
         Parser*                 _parser;
@@ -69,13 +73,22 @@ class Server
         int CreateSocket();
 
         // Getters
-        std::string get_pass() const;
+        std::string     get_pass() const;
         Client*         get_client(const std::string &nickname);
-        
+        Channel*        get_channel(const std::string& name);
+        std::string     get_admin_name();
+        std::string     get_admin_pass();
+
+
         // Handle Clients
         void            client_connect();
         void            client_disconnect(int fd);
         void            client_message(int fd);
+
+
+        Channel*        create_channel(const std::string &name, const std::string &key, Client *client);
+        
+        
 
         std::string     read_message(int fd);
 };

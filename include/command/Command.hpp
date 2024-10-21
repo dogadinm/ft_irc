@@ -34,29 +34,29 @@ class Command
 //         void execute(Client* client, std::vector<std::string> args);
 // };
 
-// class Join : public Command
-// {
-//     public:
-//         Join(Server* server);
-//         ~Join();    
-//         void execute(Client* client, std::vector<std::string> args);
-// };
+class Join : public Command
+{
+    public:
+        Join(Server* server);
+        ~Join();    
+        void execute(Client* client, std::vector<std::string> args);
+};
 
-// class Kick : public Command
-// {
-//     public:
-//         Kick(Server* server);
-//         ~Kick();    
-//         void execute(Client* client, std::vector<std::string> args);
-// };
+class Kick : public Command
+{
+    public:
+        Kick(Server* server);
+        ~Kick();    
+        void execute(Client* client, std::vector<std::string> args);
+};
 
-// class Mode : public Command
-// {
-//     public:
-//         Mode(Server* server);
-//         ~Mode();    
-//         void execute(Client* client, std::vector<std::string> args);
-// };
+class Mode : public Command
+{
+    public:
+        Mode(Server* server);
+        ~Mode();    
+        void execute(Client* client, std::vector<std::string> args);
+};
 
 class Nick : public Command
 {
@@ -106,6 +106,21 @@ class Pass : public Command
 //         ~PrivMsg();    
 //         void execute(Client* client, std::vector<std::string> args);
 // };
+class Kill : public Command
+{
+    public:
+        Kill(Server* server);
+        ~Kill();    
+        void execute(Client* client, std::vector<std::string> args);
+};
+
+class Oper : public Command
+{
+    public:
+        Oper(Server* server);
+        ~Oper();    
+        void execute(Client* client, std::vector<std::string> args);
+};
 
 class Quit : public Command
 {

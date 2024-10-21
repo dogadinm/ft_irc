@@ -10,13 +10,16 @@ Parser::Parser(Server* server): _server(server)
 
     // _commands["PING"] = new Ping(_srv);
     // _commands["PONG"] = new Pong(_srv);
-    // _commands["JOIN"] = new Join(_srv);
+    _commands["JOIN"] = new Join(_server);
+    std::cout << "hello" << std::endl;
+     _commands["KILL"] = new Kill(_server);
+    _commands["OPER"] = new Oper(_server);
     // _commands["PART"] = new Part(_srv);
-    // _commands["KICK"] = new Kick(_srv);
-    // _commands["MODE"] = new Mode(_srv);
+    _commands["KICK"] = new Kick(_server);
+    _commands["MODE"] = new Mode(_server);
 
 	// _commands["PRIVMSG"] = new PrivMsg(_srv);
-	// _commands["NOTICE"] = new Notice(_srv);  
+	// _commands["NOTICE"] = new Notice(_server);  
 }
 
 Parser::~Parser()
@@ -72,11 +75,7 @@ void Parser::invoke(Client* client, const std::string& message)
         catch(const std::exception& e)
         {
            client->reply(ERR_UNKNOWNCOMMAND(client->get_nickname(), name));
-        }
-        
+        }     
     }
-    
-
-
 }
 

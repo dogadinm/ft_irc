@@ -1,6 +1,6 @@
 #include "../../include/network/Server.hpp"
 
-Server::Server(const std::string &port, const std::string &pass) : _host("127.0.0.1"), _port(port), _pass(pass)
+Server::Server(const std::string &port, const std::string &pass) : _host("127.0.0.1"), _port(port), _pass(pass), admin_name("dogadinm"), admin_pass("12345")
 {
     _working = 1;
     _socket = CreateSocket();
@@ -222,12 +222,68 @@ Server::~Server()
 std::string Server::get_pass() const    { return _pass; }
 
 
+// Client*         Server::get_client(const std::string& nickname)
+// {
+//     for (client_iterator it = _clients.begin(); it != _clients.end(); ++it)
+//     {
+//         if (!nickname.compare(it->second->get_nickname()))
+//             return it->second; 
+//     }
+//     return NULL;
+// }
+
+
+// Channel*        Server::get_channel(const std::string& name)
+// {
+//     for (channel_iterator it = _channels.begin(); it != _channels.end(); ++it)
+//     {
+//         if (!name.compare((*it)->get_name()))
+//             return (*it);
+//     }
+//     return NULL;
+// }
+
+Channel*        Server::create_channel(const std::string& name, const std::string& key, Client* client)
+{
+    Channel *channel = new Channel(name, key, client);
+    _channels.push_back(channel);
+
+    return channel;
+}
+
 Client*         Server::get_client(const std::string& nickname)
 {
-    for (client_iterator it = _clients.begin(); it != _clients.end(); ++it)
+    client_iterator it_b = _clients.begin();
+    client_iterator it_e = _clients.end();
+
+    while (it_b != it_e)
     {
-        if (!nickname.compare(it->second->get_nickname()))
-            return it->second; 
+        if (!nickname.compare(it_b->second->get_nickname()))
+            return it_b->second;
+
+        it_b++;
     }
+
     return NULL;
 }
+
+Channel*        Server::get_channel(const std::string& name)
+{
+    channel_iterator it_b = _channels.begin();
+    channel_iterator it_e = _channels.end();
+
+    while (it_b != it_e)
+    {
+        if (!name.compare((*it_b)->get_name()))
+            return (*it_b);
+
+        it_b++;
+    }
+
+    return NULL;
+}
+
+
+
+std::string     Server::get_admin_name() { return admin_name; }
+std::string     Server::get_admin_pass() { return admin_pass; }
