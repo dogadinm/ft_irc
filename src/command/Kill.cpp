@@ -4,7 +4,7 @@ Kill::Kill(Server* server) : Command(server) {}
 
 Kill::~Kill() {}
 
-// syntax: KILL <nickname> :[<message>]
+// syntax: KILL <nickname> <message>
 
 void Kill::execute(Client* client, std::vector<std::string> args)
 {
@@ -17,10 +17,10 @@ void Kill::execute(Client* client, std::vector<std::string> args)
         return;
     }
     // if there is a reason provided (starts with ':')
-    if (args.size() >= 3 && args[2][0] == ':')
+    if (args.size() >= 2)
     {
-        reason = args[2].substr(1); // remove leading ':'
-        for (size_t i = 3; i < args.size(); i++)  // append remaining words
+        reason = args[1];
+        for (size_t i = 2; i < args.size(); i++)  // append remaining words
         {
             reason.append(" " + args[i]);
         }
@@ -38,5 +38,8 @@ void Kill::execute(Client* client, std::vector<std::string> args)
         client->reply(ERR_NOPRIVILEGES(client->get_nickname()));
         return; 
     }
+
+    std::string killMessage = ":" + client->get_nickname() + " KILL " + dest->get_nickname() + " :" + reason;
+    _server->broadcast(killMessage);   
     _server->client_disconnect(dest->get_fd());
 }

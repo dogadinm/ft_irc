@@ -88,7 +88,7 @@ class Server
 
         Channel*        create_channel(const std::string &name, const std::string &key, Client *client);
         
-        
+        void broadcast(const std::string& message);
 
         std::string     read_message(int fd);
 };

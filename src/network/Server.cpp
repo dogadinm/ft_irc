@@ -225,6 +225,7 @@ std::string Server::get_pass() const    { return _pass; }
 
 Client*         Server::get_client(const std::string& nickname)
 {
+    
     for (client_iterator it = _clients.begin(); it != _clients.end(); ++it)
     {
         if (!nickname.compare(it->second->get_nickname()))
@@ -252,6 +253,18 @@ Channel*        Server::create_channel(const std::string& name, const std::strin
     _channels.push_back(channel);
 
     return channel;
+}
+
+void Server::broadcast(const std::string& message)
+{
+    int fd_cln;
+    for (client_iterator it = _clients.begin(); it != _clients.end(); ++it)
+    {
+        fd_cln = it->second->get_fd();
+        if (send(fd_cln, message.c_str(), message.length(), 0) < 0)
+            throw std::runtime_error("Error send a message from server!");
+    }
+    
 }
 
 
