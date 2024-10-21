@@ -41,7 +41,7 @@ class Client
         
         int             _fd;
         std::string     _port;
-        bool            admin_access;
+        bool            _admin_access;
 
         std::string     _nickname;
         std::string     _username;
@@ -49,7 +49,7 @@ class Client
         std::string     _hostname;
 
         ClientState     _state;
-        Channel*        _channel;
+        std::vector<Channel *>  _channels;
 
         Client();
         Client(const Client &src);
@@ -75,7 +75,7 @@ class Client
         std::string     get_prefix() const;
         ClientState     get_state() const;
 
-        Channel*        get_channel() const;
+        Channel*        get_channel(std::string name) const;
 
     
         /* Setters */
@@ -103,7 +103,11 @@ class Client
         /* Client Actions */
 
         void            join(Channel *channel);
-        void            leave();
+        void            leave(Channel* channel);
+        void            leave_all_channels();
+
+
+        int get_channel_count() const;
 };
 
 #endif

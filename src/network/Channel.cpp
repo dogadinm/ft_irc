@@ -102,20 +102,26 @@ void                        Channel::add_client(Client* client)
 
 void                        Channel::remove_client(Client* client)
 {
-    client_iterator it_b = _clients.begin();
-    client_iterator it_e = _clients.end();
 
-    while (it_b != it_e)
-    {
-        if (*it_b == client)
-            _clients.erase(it_b);
+    // client_iterator it_b = _clients.begin();
+    // client_iterator it_e = _clients.end();
+
+    // while (it_b != it_e)
+    // {
+    //     if (*it_b == client)
+    //         _clients.erase(it_b);
         
-        it_b++;
+    //     it_b++;
+    // }
+    for (client_iterator it = _clients.begin();it != _clients.end();)
+    {
+        if (*it == client)
+            it = _clients.erase(it);
     }
-
+    
     client->set_channel(NULL);
-
-    if (client == _admin)
+    
+    if (client == _admin && !_clients.empty())
     {
         _admin = *(_clients.begin());
 

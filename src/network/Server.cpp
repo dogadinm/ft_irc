@@ -137,7 +137,8 @@ void Server::client_disconnect(int fd)
         // need to make leave from the channel when user exit
         if (_clients.find(fd) == _clients.end())
             return;
-        Client* client = _clients.at(fd);    
+        Client* client = _clients.at(fd);
+        client->leave_all_channels();    
         // std::string clientData = _clients.at(fd);
         log(client->get_hostname() + " : " + client->get_port() + " disconnected");
         
@@ -222,26 +223,28 @@ Server::~Server()
 std::string Server::get_pass() const    { return _pass; }
 
 
-// Client*         Server::get_client(const std::string& nickname)
-// {
-//     for (client_iterator it = _clients.begin(); it != _clients.end(); ++it)
-//     {
-//         if (!nickname.compare(it->second->get_nickname()))
-//             return it->second; 
-//     }
-//     return NULL;
-// }
+Client*         Server::get_client(const std::string& nickname)
+{
+    for (client_iterator it = _clients.begin(); it != _clients.end(); ++it)
+    {
+        if (!nickname.compare(it->second->get_nickname()))
+            return it->second; 
+    }
+    return NULL;
+}
 
 
-// Channel*        Server::get_channel(const std::string& name)
-// {
-//     for (channel_iterator it = _channels.begin(); it != _channels.end(); ++it)
-//     {
-//         if (!name.compare((*it)->get_name()))
-//             return (*it);
-//     }
-//     return NULL;
-// }
+Channel*        Server::get_channel(const std::string& name)
+{
+    for (channel_iterator it = _channels.begin(); it != _channels.end(); ++it)
+    {
+        if (*it == NULL) // Check NULL
+            continue;
+        if (!name.compare((*it)->get_name()))
+            return (*it);
+    }
+    return NULL;
+}
 
 Channel*        Server::create_channel(const std::string& name, const std::string& key, Client* client)
 {
@@ -249,38 +252,6 @@ Channel*        Server::create_channel(const std::string& name, const std::strin
     _channels.push_back(channel);
 
     return channel;
-}
-
-Client*         Server::get_client(const std::string& nickname)
-{
-    client_iterator it_b = _clients.begin();
-    client_iterator it_e = _clients.end();
-
-    while (it_b != it_e)
-    {
-        if (!nickname.compare(it_b->second->get_nickname()))
-            return it_b->second;
-
-        it_b++;
-    }
-
-    return NULL;
-}
-
-Channel*        Server::get_channel(const std::string& name)
-{
-    channel_iterator it_b = _channels.begin();
-    channel_iterator it_e = _channels.end();
-
-    while (it_b != it_e)
-    {
-        if (!name.compare((*it_b)->get_name()))
-            return (*it_b);
-
-        it_b++;
-    }
-
-    return NULL;
 }
 
 

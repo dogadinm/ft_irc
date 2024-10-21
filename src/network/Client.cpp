@@ -5,7 +5,7 @@
 /* Constructor and Destructor */
 
 Client::Client(int fd, const std::string &port, const std::string &hostname)  // port as std::string
-    : _fd(fd), _port(port), _hostname(hostname), _state(UNAUTHENTICATED), _channel(NULL) //, _channel(NULL)
+    : _fd(fd), _port(port), _hostname(hostname), _state(UNAUTHENTICATED), _channels(0), _admin_access(false) //, _channel(NULL)
 {
 
 }
@@ -28,17 +28,29 @@ std::string     Client::get_username() const { return _username; }
 std::string     Client::get_realname() const { return _realname; }
 std::string     Client::get_hostname() const { return _hostname; }
 ClientState     Client::get_state() const { return _state; }
-bool            Client::get_admin_access() const {return admin_access; }
+bool            Client::get_admin_access() const {return _admin_access; }
 
 std::string     Client::get_prefix() const
 {
     std::string username = _username.empty() ? "" : "!" + _username;
     std::string hostname = _hostname.empty() ? "" : "@" + _hostname;
+    std::string nickname = _admin_access ? "@" + _nickname : _nickname;
 
-    return _nickname + username + hostname;
+    return nickname + username + hostname;
 }
 
-Channel*        Client::get_channel() const { return _channel; }
+Channel*        Client::get_channel(std::string name) const 
+{
+    for (std::vector<Channel *>::const_iterator  it = _channels.begin(); it != _channels.end(); ++it)
+    {
+        if (*it == NULL) // Check NULL
+            continue;
+        if (!name.compare((*it)->get_name()))
+            return (*it);
+    }
+    return NULL;
+
+}
 
 
 /* Setters */
@@ -47,8 +59,8 @@ void            Client::set_nickname(const std::string &nickname) { _nickname = 
 void            Client::set_username(const std::string &username) { _username = username; }
 void            Client::set_realname(const std::string &realname) { _realname = realname; }
 void            Client::set_state(ClientState state) { _state = state; }
-void            Client::set_channel(Channel *channel) { _channel = channel; }
-void            Client::set_admin_access(bool status) {admin_access = status; }
+void            Client::set_channel(Channel *channel) { _channels.push_back(channel);; }
+void            Client::set_admin_access(bool status) {_admin_access = status; }
 
 
 /* Check State */
@@ -138,45 +150,134 @@ void            Client::welcome()
 // }
 
 
-void            Client::join(Channel* channel)
-{
-    channel->add_client(this);
-    _channel = channel;
+// void            Client::join(Channel* channel)
+// {
+//     channel->add_client(this);
+//     _channel = channel;
 
-    // Get users on the channel
+//     // Get users on the channel
 
-    std::string users = "";
-    std::vector<std::string> nicknames = channel->get_nicknames();
-    std::vector<std::string>::iterator it_b = nicknames.begin();
-    std::vector<std::string>::iterator it_e = nicknames.end();
-    while (it_b != it_e)
-    {
-        users.append(*it_b + " ");
-        it_b++;
-    }
+//     std::string users = "";
+//     std::vector<std::string> nicknames = channel->get_nicknames();
+//     std::vector<std::string>::iterator it_b = nicknames.begin();
+//     std::vector<std::string>::iterator it_e = nicknames.end();
+//     while (it_b != it_e)
+//     {
+//         users.append(*it_b + " ");
+//         it_b++;
+//     }
 
-    // Send replies
+//     // Send replies
     
-    reply(RPL_NAMREPLY(_nickname, channel->get_name(), users));
-    reply(RPL_ENDOFNAMES(_nickname, channel->get_name()));
-    channel->broadcast(RPL_JOIN(get_prefix(), channel->get_name()));
+//     reply(RPL_NAMREPLY(_nickname, channel->get_name(), users));
+//     reply(RPL_ENDOFNAMES(_nickname, channel->get_name()));
+//     channel->broadcast(RPL_JOIN(get_prefix(), channel->get_name()));
 
-    // log
+//     // log
 
-    std::string message = _nickname + " has joined to the channel " + channel->get_name();
-    log(message);
+//     std::string message = _nickname + " has joined to the channel " + channel->get_name();
+//     log(message);
+// }
+
+// void            Client::leave()
+// {
+//     if (!_channel)
+//         return;
+
+//     const std::string name = _channel->get_name();
+
+//     _channel->broadcast(RPL_PART(get_prefix(), _channel->get_name()));
+//     _channel->remove_client(this);
+
+//     std::string message = _nickname + " has left the channel " + name;
+//     log(message);
+// }
+
+
+void Client::join(Channel* channel)
+{
+    // Check if already in the channel
+    if (std::find(_channels.begin(), _channels.end(), channel) == _channels.end())
+    {
+        _channels.push_back(channel);  // Add to list of channels
+        channel->add_client(this);     // Assuming this method adds the client to the channel
+
+        // Send user list and broadcast the join event
+        std::string users = "";
+        std::vector<std::string> nicknames = channel->get_nicknames();
+        for (std::vector<std::string>::iterator it = nicknames.begin(); it != nicknames.end(); ++it)
+        {
+            users.append(*it + " ");
+        }
+
+        // Notify client of the current users in the channel
+        reply(RPL_NAMREPLY(_nickname, channel->get_name(), users));
+        reply(RPL_ENDOFNAMES(_nickname, channel->get_name()));
+
+        // Broadcast join message to the channel
+        channel->broadcast(RPL_JOIN(get_prefix(), channel->get_name()));
+        log(_nickname + " has joined the channel " + channel->get_name());
+    }
 }
 
-void            Client::leave()
+void Client::leave(Channel* channel)
 {
-    if (!_channel)
-        return;
+    std::vector<Channel*>::iterator it = std::find(_channels.begin(), _channels.end(), channel);
+    if (it != _channels.end())
+    {
+        _channels.erase(it);  // Remove from the list of channels
+        channel->remove_client(this);  // Assuming this method removes the client from the channel
 
-    const std::string name = _channel->get_name();
+        // Notify channel of departure
+        channel->broadcast(RPL_PART(get_prefix(), channel->get_name()));
 
-    _channel->broadcast(RPL_PART(get_prefix(), _channel->get_name()));
-    _channel->remove_client(this);
+        log(_nickname + " has left the channel " + channel->get_name());
+    }
+}
+// void Client::leave_all_channels()
+// {
+        
+//     // for (std::vector<Channel*>::iterator it = _channels.begin(); it != _channels.end(); ++it)
+//     // {
+        
+//     //     Channel* channel = *it;
+//     //     std::cout << *it << std::endl;   
+//     // }
+    
+//     for (std::vector<Channel*>::iterator it = _channels.begin(); it != _channels.end(); ++it)
+//     {
 
-    std::string message = _nickname + " has left the channel " + name;
-    log(message);
+//         Channel* channel = *it;
+
+//         channel->remove_client(this);
+
+//         channel->broadcast(RPL_PART(get_prefix(), channel->get_name()));
+
+//         log(_nickname + " has left the channel " + channel->get_name());
+
+//         _channels.erase(it);
+
+//     }
+// }
+
+void Client::leave_all_channels()
+{
+    for (size_t i = 0; i < _channels.size();)
+    {
+        Channel* channel = _channels[i]; 
+        if (channel != NULL)
+        {
+            channel->remove_client(this); 
+            channel->broadcast(RPL_PART(get_prefix(), channel->get_name()));
+            log(_nickname + " has left the channel " + channel->get_name());
+            _channels.erase(_channels.begin() + i); 
+        }
+        else
+            ++i;
+    }
+}
+
+int Client::get_channel_count() const
+{
+    return _channels.size();  // Return the number of channels the client is in
 }
