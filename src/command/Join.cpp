@@ -8,6 +8,7 @@ Join::~Join() {}
 
 void Join::execute(Client* client, std::vector<std::string> args)
 {
+    std::cout << "hello" << std::endl;
     if (args.empty())
     {
         client->reply(ERR_NEEDMOREPARAMS(client->get_nickname(), "JOIN"));
@@ -17,8 +18,11 @@ void Join::execute(Client* client, std::vector<std::string> args)
 
     std::string name = args[0];
     std::string pass = args.size() > 1 ? args[1] : "";
-
+    // std::cout << "hello2" << std::endl;
     Channel* current_channel = client->get_channel();
+    // std::cout << "hello3" << std::endl;
+    // client->reply (current_channel->get_name());
+    // std::cout << "hello4" << std::endl;
     if (current_channel)
     {
         client->reply(ERR_TOOMANYCHANNELS(client->get_nickname(), name));

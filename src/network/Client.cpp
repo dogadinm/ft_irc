@@ -5,7 +5,7 @@
 /* Constructor and Destructor */
 
 Client::Client(int fd, const std::string &port, const std::string &hostname)  // port as std::string
-    : _fd(fd), _port(port), _hostname(hostname), _state(UNAUTHENTICATED) //, _channel(NULL)
+    : _fd(fd), _port(port), _hostname(hostname), _state(UNAUTHENTICATED), _channel(NULL) //, _channel(NULL)
 {
 
 }
