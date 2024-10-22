@@ -75,6 +75,7 @@ class Channel
         void                        remove_client(Client* client);
 
         void                        kick(Client* client, Client* target, const std::string& reason);
+        Client*                     get_client(std::string name);
 };
 
 #endif

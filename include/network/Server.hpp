@@ -91,5 +91,6 @@ class Server
         void broadcast(const std::string& message);
 
         std::string     read_message(int fd);
+        void            remove_channel(Channel* channel);
 };
 

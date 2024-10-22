@@ -268,6 +268,20 @@ void Server::broadcast(const std::string& message)
 }
 
 
+void Server::remove_channel(Channel* channel)
+{
+    for(channel_iterator it = _channels.begin(); it != _channels.end(); ++it)
+    {
+        if (*it == channel)
+        {
+            _channels.erase(it);
+            break;
+        }
+    }
+
+}
+
+
 
 std::string     Server::get_admin_name() { return admin_name; }
 std::string     Server::get_admin_pass() { return admin_pass; }

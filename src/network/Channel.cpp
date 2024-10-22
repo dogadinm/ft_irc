@@ -55,6 +55,23 @@ std::vector<std::string>    Channel::get_nicknames()
     return nicknames;
 }
 
+Client*   Channel::get_client(std::string name)
+{
+    std::vector<std::string> nicknames;
+
+    client_iterator it_b = _clients.begin();
+    client_iterator it_e = _clients.end();
+
+    while (it_b != it_e)
+    {
+        Client* client = *it_b;
+        if (!name.compare((*it_b)->get_nickname()))
+            return (*it_b);
+        it_b++;
+    }
+    return NULL;
+}
+
 
 /* Setters */
 
@@ -103,23 +120,24 @@ void                        Channel::add_client(Client* client)
 void                        Channel::remove_client(Client* client)
 {
 
-    // client_iterator it_b = _clients.begin();
-    // client_iterator it_e = _clients.end();
+    client_iterator it_b = _clients.begin();
+    client_iterator it_e = _clients.end();
 
-    // while (it_b != it_e)
-    // {
-    //     if (*it_b == client)
-    //         _clients.erase(it_b);
-        
-    //     it_b++;
-    // }
-    for (client_iterator it = _clients.begin();it != _clients.end();)
+    while (it_b != it_e)
     {
-        if (*it == client)
-            it = _clients.erase(it);
+        if (*it_b == client)
+            _clients.erase(it_b);
+        it_b++;
     }
+    // client->remove_channel(this);
+
+    // for (client_iterator it = _clients.begin();it != _clients.end();)
+    // {
+    //     if (*it == client)
+    //         it = _clients.erase(it);
+    // }
     
-    client->set_channel(NULL);
+    // client->set_channel(NULL);
     
     if (client == _admin && !_clients.empty())
     {
@@ -132,7 +150,7 @@ void                        Channel::remove_client(Client* client)
 
 void                        Channel::kick(Client* client, Client* target, const std::string& reason)
 {
-    this->broadcast(RPL_KICK(client->get_prefix(), _name, target->get_nickname(), reason));
+    // this->broadcast(RPL_KICK(client->get_prefix(), _name, target->get_nickname(), reason));
     this->remove_client(target);
 
     std::string message = client->get_nickname() + " kicked " + target->get_nickname() + " from channel " + _name;

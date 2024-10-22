@@ -39,7 +39,19 @@ void Kill::execute(Client* client, std::vector<std::string> args)
         return; 
     }
 
-    std::string killMessage = ":" + client->get_nickname() + " KILL " + dest->get_nickname() + " :" + reason;
+    std::string killMessage = ":" + client->get_nickname() + " KILL " + dest->get_nickname() + " :" + reason + "\n";
     _server->broadcast(killMessage);   
+
+    std::vector<Channel*> channels = dest->get_channels();
     _server->client_disconnect(dest->get_fd());
+    for (std::vector<Channel*>::iterator it = channels.begin(); it != channels.end(); ++it)
+    {
+        Channel* channel = *it;
+        if (channel->get_size() == 0)
+        {
+            _server->remove_channel(channel);
+            log(channel->get_name() + " closed");
+        }
+            
+    }
 }

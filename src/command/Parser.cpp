@@ -13,11 +13,10 @@ Parser::Parser(Server* server): _server(server)
     _commands["JOIN"] = new Join(_server);
      _commands["KILL"] = new Kill(_server);
     _commands["OPER"] = new Oper(_server);
-    // _commands["PART"] = new Part(_srv);
-    // _commands["KICK"] = new Kick(_server);
+    _commands["PART"] = new Part(_server);
+    _commands["KICK"] = new Kick(_server);
     _commands["MODE"] = new Mode(_server);
-
-	// _commands["PRIVMSG"] = new PrivMsg(_srv);
+	_commands["PRIVMSG"] = new PrivMsg(_server);
 	// _commands["NOTICE"] = new Notice(_server);  
 }
 

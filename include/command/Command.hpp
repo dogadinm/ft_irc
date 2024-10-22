@@ -67,13 +67,13 @@ class Nick : public Command
 };
 
 
-// class Part : public Command
-// {
-//     public:
-//         Part(Server* server);
-//         ~Part();    
-//         void execute(Client* client, std::vector<std::string> args);
-// };
+class Part : public Command
+{
+    public:
+        Part(Server* server);
+        ~Part();    
+        void execute(Client* client, std::vector<std::string> args);
+};
 
 class Pass : public Command
 {
@@ -99,13 +99,14 @@ class Pass : public Command
 //         void execute(Client* client, std::vector<std::string> args);
 // };
 
-// class PrivMsg : public Command
-// {
-//     public:
-//         PrivMsg(Server* server);
-//         ~PrivMsg();    
-//         void execute(Client* client, std::vector<std::string> args);
-// };
+class PrivMsg : public Command
+{
+    public:
+        PrivMsg(Server* server);
+        ~PrivMsg();    
+        void execute(Client* client, std::vector<std::string> args);
+};
+
 class Kill : public Command
 {
     public:

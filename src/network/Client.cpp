@@ -29,6 +29,7 @@ std::string     Client::get_realname() const { return _realname; }
 std::string     Client::get_hostname() const { return _hostname; }
 ClientState     Client::get_state() const { return _state; }
 bool            Client::get_admin_access() const {return _admin_access; }
+std::vector<Channel *> Client::get_channels() const { return _channels; }
 
 std::string     Client::get_prefix() const
 {
@@ -102,97 +103,6 @@ void            Client::welcome()
 
 /* Client Actions */
 
-// void            Client::join(Channel* channel)
-// {
-//     // std::lock_guard<std::mutex> lock(_mutex);  // Thread-safe access
-
-//     // channel->add_client(this);
-//     // _channel = channel;
-
-//     // Get users on the channel
-
-//     std::string users = "";
-//     std::vector<std::string> nicknames = channel->get_nicknames();
-//     std::vector<std::string>::iterator it_b = nicknames.begin();
-//     std::vector<std::string>::iterator it_e = nicknames.end();
-//     while (it_b != it_e)
-//     {
-//         users.append(*it_b + " ");
-//         it_b++;
-//     }
-
-//     // Send replies
-
-//     // reply(RPL_NAMREPLY(_nickname, channel->get_name(), users));
-//     // reply(RPL_ENDOFNAMES(_nickname, channel->get_name()));
-//     // channel->broadcast(RPL_JOIN(get_prefix(), channel->get_name()));
-
-//     // log
-
-//     std::string message = _nickname + " has joined the channel " + channel->get_name();
-//     log(message);
-// }
-
-// void            Client::leave()
-// {
-//     std::lock_guard<std::mutex> lock(_mutex);  // Thread-safe access
-
-//     if (!_channel)
-//         return;
-
-//     const std::string name = _channel->get_name();
-
-//     _channel->broadcast(RPL_PART(get_prefix(), _channel->get_name()));
-//     _channel->remove_client(this);
-
-//     std::string message = _nickname + " has left the channel " + name;
-//     log(message);
-// }
-
-
-// void            Client::join(Channel* channel)
-// {
-//     channel->add_client(this);
-//     _channel = channel;
-
-//     // Get users on the channel
-
-//     std::string users = "";
-//     std::vector<std::string> nicknames = channel->get_nicknames();
-//     std::vector<std::string>::iterator it_b = nicknames.begin();
-//     std::vector<std::string>::iterator it_e = nicknames.end();
-//     while (it_b != it_e)
-//     {
-//         users.append(*it_b + " ");
-//         it_b++;
-//     }
-
-//     // Send replies
-    
-//     reply(RPL_NAMREPLY(_nickname, channel->get_name(), users));
-//     reply(RPL_ENDOFNAMES(_nickname, channel->get_name()));
-//     channel->broadcast(RPL_JOIN(get_prefix(), channel->get_name()));
-
-//     // log
-
-//     std::string message = _nickname + " has joined to the channel " + channel->get_name();
-//     log(message);
-// }
-
-// void            Client::leave()
-// {
-//     if (!_channel)
-//         return;
-
-//     const std::string name = _channel->get_name();
-
-//     _channel->broadcast(RPL_PART(get_prefix(), _channel->get_name()));
-//     _channel->remove_client(this);
-
-//     std::string message = _nickname + " has left the channel " + name;
-//     log(message);
-// }
-
 
 void Client::join(Channel* channel)
 {
@@ -262,22 +172,32 @@ void Client::leave(Channel* channel)
 
 void Client::leave_all_channels()
 {
-    for (size_t i = 0; i < _channels.size();)
+    for (std::vector<Channel*>::iterator it = _channels.begin(); it != _channels.end(); ++it)
     {
-        Channel* channel = _channels[i]; 
-        if (channel != NULL)
-        {
-            channel->remove_client(this); 
-            channel->broadcast(RPL_PART(get_prefix(), channel->get_name()));
-            log(_nickname + " has left the channel " + channel->get_name());
-            _channels.erase(_channels.begin() + i); 
-        }
-        else
-            ++i;
+        Channel* channel = *it;  
+        channel->broadcast(RPL_PART(get_prefix(), channel->get_name()));  // Уведомить канал
+        log(_nickname + " has left the channel " + channel->get_name());
+        channel->remove_client(this);
     }
+    _channels.clear();
+
 }
 
 int Client::get_channel_count() const
 {
     return _channels.size();  // Return the number of channels the client is in
+}
+
+void Client::remove_channel(Channel* channel)
+{
+
+    channel_iterator it_b = _channels.begin();
+    channel_iterator it_e = _channels.end();
+
+    while (it_b != it_e)
+    {
+        if (*it_b == channel)
+            _channels.erase(it_b);
+        it_b++;
+    }
 }

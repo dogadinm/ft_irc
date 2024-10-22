@@ -37,6 +37,7 @@ enum ClientState
 
 class Client 
 {
+    typedef std::vector<Channel *>::iterator channel_iterator;
     private:
         
         int             _fd;
@@ -74,7 +75,7 @@ class Client
         std::string     get_hostname() const;
         std::string     get_prefix() const;
         ClientState     get_state() const;
-
+        std::vector<Channel *> get_channels() const;
         Channel*        get_channel(std::string name) const;
 
     
@@ -106,8 +107,8 @@ class Client
         void            leave(Channel* channel);
         void            leave_all_channels();
 
-
-        int get_channel_count() const;
+        void            remove_channel(Channel* channel);
+        int             get_channel_count() const;
 };
 
 #endif
