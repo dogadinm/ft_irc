@@ -139,11 +139,10 @@ void                        Channel::remove_client(Client* client)
     // }
     
     // client->set_channel(NULL);
-    std::string message = client->get_nickname() + " left channel " + _name;
-        log(message);   
+    log(client->get_nickname() + " left channel " + _name);   
     if (get_admin(client->get_nickname()) && !_clients.empty())
     {
-        _admin = *(_clients.begin());
+        _operators.push_back(*(_clients.begin()));
 
         std::string message = _admin->get_nickname() + " is now the admin of the channel " + _name;
         log(message);
