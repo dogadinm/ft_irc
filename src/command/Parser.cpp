@@ -8,8 +8,8 @@ Parser::Parser(Server* server): _server(server)
     _commands["USER"] = new User(_server, false);
     _commands["QUIT"] = new Quit(_server, false);
 
-    // _commands["PING"] = new Ping(_srv);
-    // _commands["PONG"] = new Pong(_srv);
+    _commands["PING"] = new Ping(_server);
+    _commands["PONG"] = new Pong(_server);
     _commands["JOIN"] = new Join(_server);
      _commands["kill"] = new Kill(_server);
     _commands["OPER"] = new Oper(_server);
@@ -18,7 +18,7 @@ Parser::Parser(Server* server): _server(server)
     _commands["MODE"] = new Mode(_server);
 	_commands["PRIVMSG"] = new PrivMsg(_server);
     _commands["TOPIC"] = new Topic(_server);
-	// _commands["NOTICE"] = new Notice(_server);  
+	_commands["NOTICE"] = new Notice(_server);  
 }
 
 Parser::~Parser()

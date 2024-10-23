@@ -26,13 +26,13 @@ class Command
 
 // Command classes
 
-// class Notice : public Command
-// {
-//     public:
-//         Notice(Server* server);
-//         ~Notice();    
-//         void execute(Client* client, std::vector<std::string> args);
-// };
+class Notice : public Command
+{
+    public:
+        Notice(Server* server);
+        ~Notice();    
+        void execute(Client* client, std::vector<std::string> args);
+};
 
 class Join : public Command
 {
@@ -92,21 +92,21 @@ class Topic : public Command
 };
 
 
-// class Ping : public Command
-// {
-//     public:
-//         Ping(Server* server);
-//         ~Ping();    
-//         void execute(Client* client, std::vector<std::string> args);
-// };
+class Ping : public Command
+{
+    public:
+        Ping(Server* server);
+        ~Ping();    
+        void execute(Client* client, std::vector<std::string> args);
+};
 
-// class Pong : public Command
-// {
-//     public:
-//         Pong(Server* server);
-//         ~Pong();    
-//         void execute(Client* client, std::vector<std::string> args);
-// };
+class Pong : public Command
+{
+    public:
+        Pong(Server* server);
+        ~Pong();    
+        void execute(Client* client, std::vector<std::string> args);
+};
 
 class PrivMsg : public Command
 {
