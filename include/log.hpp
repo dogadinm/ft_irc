@@ -25,6 +25,7 @@
 #define ERR_NOSUCHCHANNEL(source, channel)              "403 " + source + " " + channel + " :No such channel"
 #define ERR_BADCHANNELKEY(source, channel)              "475 " + source + " " + channel + " :Cannot join channel (+k)"
 #define ERR_CHANNELISFULL(source, channel)              "471 " + source + " " + channel + " :Cannot join channel (+l)"
+#define ERR_INVITEONLYCHAN(source, channel)             "473 " + source + " " + channel + " :Cannot join channel (+i)"
 #define ERR_CANNOTSENDTOCHAN(source, channel)           "404 " + source + " " + channel + " :Cannot send to channel"
 #define ERR_CHANOPRIVSNEEDED(source, channel)           "482 " + source + " " + channel + " :You're not channel operator"
 #define ERR_NOSUCHNICK(source, nickname)                "401 " + source + " " + nickname + " :No such nick/channel"
@@ -47,7 +48,8 @@
 #define RPL_QUIT(source, message)                       ":" + source + " QUIT :Quit: " + message
 #define RPL_KICK(source, channel, target, reason)       ":" + source + " KICK " + channel + " " + target + " :" + reason
 #define RPL_MODE(source, channel, modes, args)          ":" + source + " MODE " + channel + " " + modes + " " + args
-
+#define RPL_NOTOPIC(channel)                            "331 " + channel + ":No topic is set"
+#define RPL_TOPIC(channel, topic)                       "332 " + channel + " " + topic
 
 static inline void log(const std::string& message) {
     char buffer[80];

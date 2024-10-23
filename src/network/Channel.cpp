@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   Channel.cpp                                        :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: shovsepy <marvin@42.fr>                    +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/12/26 20:34:45 by shovsepy          #+#    #+#             */
-/*   Updated: 2022/12/26 20:42:09 by shovsepy         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "../../include/network/Channel.hpp"
 
 
@@ -18,7 +6,7 @@
 Channel::Channel(const std::string& name, const std::string& key, Client* admin)
     : _name(name), _admin(admin), _k(key), _l(0), _n(false)
 {
-
+    _operators.push_back(_admin);
 }
 
 Channel::~Channel() {}
@@ -27,13 +15,25 @@ Channel::~Channel() {}
 /* Getters */
 
 std::string                 Channel::get_name() const { return _name; }
-Client*                     Channel::get_admin() const { return _admin; }
+Client*                     Channel::get_admin(std::string name) const 
+{ 
+    for (std::vector<Client *>::const_iterator it = _operators.begin(); it  != _operators.end(); ++it)
+    {
+        Client* client = *it;
+        if(client->get_nickname() == name)
+            return *it;
+    }
+    return NULL; 
+}
 
 std::string                 Channel::get_key() const { return _k; }
 size_t                      Channel::get_limit() const { return _l; }
 bool                        Channel::ext_msg() const { return _n; }
+bool                        Channel::is_invite_only() const { return _i; }
+bool                        Channel::is_topic_restricted() const { return _t; }
 
 size_t                      Channel::get_size()const { return _clients.size(); }
+std::string                 Channel::get_topic() const { return _topic;}
 
 std::vector<std::string>    Channel::get_nicknames()
 {
@@ -78,7 +78,9 @@ Client*   Channel::get_client(std::string name)
 void                        Channel::set_key(std::string key) { _k = key; }
 void                        Channel::set_limit(size_t limit) { _l = limit; }
 void                        Channel::set_ext_msg(bool flag) { _n = flag; }
-
+void                        Channel::set_invite_only(bool flag) { _i = flag; }
+void                        Channel::set_topic_restricted(bool flag) { _t = flag; }
+void                        Channel::set_topic(const std::string& newTopic) {_topic = newTopic; }
 
 /* Channel Actions */
 
@@ -119,7 +121,6 @@ void                        Channel::add_client(Client* client)
 
 void                        Channel::remove_client(Client* client)
 {
-
     client_iterator it_b = _clients.begin();
     client_iterator it_e = _clients.end();
 
@@ -140,7 +141,7 @@ void                        Channel::remove_client(Client* client)
     // client->set_channel(NULL);
     std::string message = client->get_nickname() + " left channel " + _name;
         log(message);   
-    if (client == _admin && !_clients.empty())
+    if (get_admin(client->get_nickname()) && !_clients.empty())
     {
         _admin = *(_clients.begin());
 
@@ -156,4 +157,27 @@ void                        Channel::kick(Client* client, Client* target, const 
 
     std::string message = client->get_nickname() + " kicked " + target->get_nickname() + " from channel " + _name;
     log(message);
+}
+
+
+
+void Channel::add_operator(Client* client)
+{
+    if (std::find(_operators.begin(), _operators.end(), client) == _operators.end())
+    {
+        _operators.push_back(client);
+        std::string message = client->get_nickname() + " is now an operator of channel " + _name;
+        log(message);
+    }
+}
+
+void Channel::remove_operator(Client* client)
+{
+    client_iterator it = std::find(_operators.begin(), _operators.end(), client);
+    if (it != _operators.end())
+    {
+        _operators.erase(it);
+        std::string message = client->get_nickname() + " is no longer an operator of channel " + _name;
+        log(message);
+    }
 }

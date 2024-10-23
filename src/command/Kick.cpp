@@ -45,7 +45,7 @@ void Kick::execute(Client* client, std::vector<std::string> args)
     }
 
     // Check if the client has administrative privileges in the channel
-    if (channel->get_admin() != client)
+    if (channel->get_admin(client->get_nickname()) != client)
     {
         client->reply(ERR_CHANOPRIVSNEEDED(client->get_nickname(), channel_name));
         return;

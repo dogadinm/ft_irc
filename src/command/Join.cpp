@@ -44,6 +44,12 @@ void Join::execute(Client* client, std::vector<std::string> args)
         client->reply(ERR_CHANNELISFULL(client->get_nickname(), name));
         return;
     }
+    // Check if the channel has a password and if it's incorrect
+    if (channel->is_invite_only())
+    {
+        client->reply(ERR_INVITEONLYCHAN(client->get_nickname(), name));
+        return;
+    }
 
     // Check if the channel has a password and if it's incorrect
     if (!channel->get_key().empty() && channel->get_key() != pass)

@@ -1,18 +1,8 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   Quit.cpp                                           :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: shovsepy <marvin@42.fr>                    +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/12/28 23:19:10 by shovsepy          #+#    #+#             */
-/*   Updated: 2022/12/28 23:24:45 by shovsepy         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
+
 
 #include "../../include/command/Command.hpp"
 
-Quit::Quit(Server* srv, bool auth) : Command(srv, auth) {}
+Quit::Quit(Server* server, bool auth) : Command(server, auth) {}
 
 Quit::~Quit() {}
 

@@ -83,6 +83,15 @@ class Pass : public Command
         void execute(Client* client, std::vector<std::string> args);
 };
 
+class Topic : public Command
+{
+    public:
+        Topic(Server* server);
+        ~Topic();    
+        void execute(Client* client, std::vector<std::string> args);
+};
+
+
 // class Ping : public Command
 // {
 //     public:

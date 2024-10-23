@@ -17,6 +17,7 @@ Parser::Parser(Server* server): _server(server)
     _commands["KICK"] = new Kick(_server);
     _commands["MODE"] = new Mode(_server);
 	_commands["PRIVMSG"] = new PrivMsg(_server);
+    _commands["TOPIC"] = new Topic(_server);
 	// _commands["NOTICE"] = new Notice(_server);  
 }
 
