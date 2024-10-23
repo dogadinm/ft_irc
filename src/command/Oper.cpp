@@ -15,7 +15,7 @@ void    Oper::execute(Client* client, std::vector<std::string> args)
     }
     if(client->get_admin_access() == true)
     {
-        client->reply(RPL_YOUREOPER);
+        client->reply(RPL_YOUREOPER(client->get_nickname()));
         return;
     }
     if (args[1] != _server->get_admin_pass())
@@ -26,6 +26,6 @@ void    Oper::execute(Client* client, std::vector<std::string> args)
     if (args[0] == _server->get_admin_name())
     {
         client->set_admin_access(true);
-        client->reply(RPL_YOUREOPER);
+        client->reply(RPL_YOUREOPER(client->get_nickname()));
     }
 }

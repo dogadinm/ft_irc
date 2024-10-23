@@ -65,13 +65,13 @@ void Kick::execute(Client* client, std::vector<std::string> args)
         client->reply(ERR_USERNOTINCHANNEL(client->get_nickname(), dest->get_nickname(), channel_name));
         return;
     }
-
+    // channel->broadcast(dest->get_nickname() + " has been kicked from the channel by " + client->get_nickname() + ". Reason: " + reason);
     // If everything is valid, kick the target client
     channel->kick(client, dest, reason);
     dest->remove_channel(channel);
 
     // Notify all clients in the channel about the kick
-    channel->broadcast(dest->get_nickname() + " has been kicked from the channel by " + client->get_nickname() + ". Reason: " + reason);
+    
     if (channel->get_size() == 0)
     {
         _server->remove_channel(channel);

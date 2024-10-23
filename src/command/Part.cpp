@@ -28,7 +28,7 @@ void Part::execute(Client* client, std::vector<std::string> args)
     }
 
     // Broadcast the part message to the channel
-    channel->broadcast(RPL_PART(partMessage, name));
+    channel->broadcast(RPL_PART(client->get_nickname(), name));
 
     // Remove the client from the channel
     channel->remove_client(client);

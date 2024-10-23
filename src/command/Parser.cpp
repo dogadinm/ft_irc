@@ -11,7 +11,7 @@ Parser::Parser(Server* server): _server(server)
     // _commands["PING"] = new Ping(_srv);
     // _commands["PONG"] = new Pong(_srv);
     _commands["JOIN"] = new Join(_server);
-     _commands["KILL"] = new Kill(_server);
+     _commands["kill"] = new Kill(_server);
     _commands["OPER"] = new Oper(_server);
     _commands["PART"] = new Part(_server);
     _commands["KICK"] = new Kick(_server);

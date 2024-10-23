@@ -138,7 +138,8 @@ void                        Channel::remove_client(Client* client)
     // }
     
     // client->set_channel(NULL);
-    
+    std::string message = client->get_nickname() + " left channel " + _name;
+        log(message);   
     if (client == _admin && !_clients.empty())
     {
         _admin = *(_clients.begin());
@@ -150,7 +151,7 @@ void                        Channel::remove_client(Client* client)
 
 void                        Channel::kick(Client* client, Client* target, const std::string& reason)
 {
-    // this->broadcast(RPL_KICK(client->get_prefix(), _name, target->get_nickname(), reason));
+    this->broadcast(RPL_KICK(client->get_prefix(), _name, target->get_nickname(), reason));
     this->remove_client(target);
 
     std::string message = client->get_nickname() + " kicked " + target->get_nickname() + " from channel " + _name;
