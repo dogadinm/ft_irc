@@ -11,14 +11,15 @@ Parser::Parser(Server* server): _server(server)
     _commands["PING"] = new Ping(_server);
     _commands["PONG"] = new Pong(_server);
     _commands["JOIN"] = new Join(_server);
-     _commands["kill"] = new Kill(_server);
+    _commands["kill"] = new Kill(_server);
     _commands["OPER"] = new Oper(_server);
     _commands["PART"] = new Part(_server);
     _commands["KICK"] = new Kick(_server);
     _commands["MODE"] = new Mode(_server);
 	_commands["PRIVMSG"] = new PrivMsg(_server);
     _commands["TOPIC"] = new Topic(_server);
-	_commands["NOTICE"] = new Notice(_server);  
+	_commands["NOTICE"] = new Notice(_server);
+    _commands["INVITE"] = new Invite(_server); 
 }
 
 Parser::~Parser()

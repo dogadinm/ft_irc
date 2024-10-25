@@ -1,6 +1,6 @@
 #include "../../include/command/Command.hpp"
 
-Kick::Kick(Server* srv) : Command(srv) {}
+Kick::Kick(Server* server) : Command(server) {}
 
 Kick::~Kick() {}
 

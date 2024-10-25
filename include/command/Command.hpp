@@ -91,6 +91,15 @@ class Topic : public Command
         void execute(Client* client, std::vector<std::string> args);
 };
 
+class Invite : public Command
+{
+    public:
+        Invite(Server* server);
+        ~Invite();    
+        void execute(Client* client, std::vector<std::string> args);
+};
+
+
 
 class Ping : public Command
 {

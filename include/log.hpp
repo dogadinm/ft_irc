@@ -30,7 +30,7 @@
 #define ERR_CHANOPRIVSNEEDED(source, channel)           "482 " + source + " " + channel + " :You're not channel operator"
 #define ERR_NOSUCHNICK(source, nickname)                "401 " + source + " " + nickname + " :No such nick/channel"
 #define ERR_USERNOTINCHANNEL(source, nickname, channel) "441 " + source + " " + nickname + " " + channel + " :They aren't on that channel"
-
+#define ERR_USERONCHANNEL(nickname, channel)            "443 " + nickname + " " + channel + " :is already on channel"
 /* Numeric Responses */
 
 #define RPL_WELCOME(source)                             "001 " + source + " :Welcome " + source + " to the ft_irc network"

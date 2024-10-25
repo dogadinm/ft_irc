@@ -1,6 +1,6 @@
 #include "../../include/command/Command.hpp"
 
-Join::Join(Server* srv) : Command(srv) {}
+Join::Join(Server* server) : Command(server) {}
 
 Join::~Join() {}
 
