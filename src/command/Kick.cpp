@@ -77,4 +77,5 @@ void Kick::execute(Client* client, std::vector<std::string> args)
         _server->remove_channel(channel);
         log(channel->get_name() + " closed");
     }
+    // delete dest;
 }

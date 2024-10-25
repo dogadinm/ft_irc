@@ -9,7 +9,19 @@ Channel::Channel(const std::string& name, const std::string& key, Client* admin)
     _operators.push_back(_admin);
 }
 
-Channel::~Channel() {}
+Channel::~Channel() 
+{
+    // for (std::vector<Client *>::iterator it = _clients.begin(); it != _clients.end(); ++it) {
+    //     delete *it;
+    // }
+    // _clients.clear();
+
+    // for (std::vector<Client *>::iterator it = _operators.begin(); it != _operators.end(); ++it){
+    //     delete *it;
+    // }
+    // _operators.clear();
+
+}
 
 
 /* Getters */
@@ -131,15 +143,7 @@ void                        Channel::remove_client(Client* client)
             _clients.erase(it_b);
         it_b++;
     }
-    // client->remove_channel(this);
 
-    // for (client_iterator it = _clients.begin();it != _clients.end();)
-    // {
-    //     if (*it == client)
-    //         it = _clients.erase(it);
-    // }
-    
-    // client->set_channel(NULL);
     log(client->get_nickname() + " left channel " + _name);   
     if (get_admin(client->get_nickname()) && !_clients.empty())
     {

@@ -226,27 +226,17 @@ std::string Server::read_message(int fd)
 
 Server::~Server()
 {
-    // if (_socket >= 0) 
-    //     close(_socket);
-    // std::map<int, Client *> _clients;
-    // for(client_iterator it = _clients.begin(); it != _clients.end(); ++it)
-    // {
-    //     delete it->second;
-    // }
-    // // for (size_t i = 0; i < _channels.size(); i++)
-    // // _clients.clear();
-    // // delete _clients[i];
-
-    // delete _parser;
     for (client_iterator it = _clients.begin(); it != _clients.end(); ++it) {
-        delete it->second; // Delete each dynamically allocated Client
+        delete it->second;
     }
-    _clients.clear(); // Clear the map
+    _clients.clear();
+
     for (channel_iterator it = _channels.begin(); it != _channels.end(); ++it){
-        delete *it; // Delete each dynamically allocated Channel
+        delete *it;
     }
-    _channels.clear(); // Clear the vector
-    delete _parser; // Delete the parser if it was created
+    _channels.clear();
+
+    delete _parser;
     std::cout << "Server stopped" << std::endl;
 }
 
@@ -309,6 +299,7 @@ void Server::remove_channel(Channel* channel)
             break;
         }
     }
+    delete channel;
 
 }
 

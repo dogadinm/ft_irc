@@ -13,6 +13,10 @@ Client::Client(int fd, const std::string &port, const std::string &hostname)  //
 
 Client::~Client()
 {
+    // for (channel_iterator it = _channels.begin(); it != _channels.end(); ++it){
+    //     delete *it;
+    // }
+    // _channels.clear();
     // Clean up _channel if Client is responsible for it (assumes external management here)
     // delete _channel; // Uncomment if dynamically allocated and Client manages it
 }
