@@ -65,7 +65,7 @@ Client*   Channel::get_client(std::string name)
 
     while (it_b != it_e)
     {
-        Client* client = *it_b;
+        // Client* client = *it_b;
         if (!name.compare((*it_b)->get_nickname()))
             return (*it_b);
         it_b++;

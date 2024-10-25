@@ -216,6 +216,9 @@ Server::~Server()
     if (_socket >= 0) 
         close(_socket);
 
+    for (size_t i = 0; i < _channels.size(); i++)
+        delete _clients[i];
+
     delete _parser;
 }
 

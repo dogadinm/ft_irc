@@ -1,10 +1,10 @@
 
 
-#include "../../include/command/Command.hpp"
+// #include "../../include/command/Command.hpp"
 
-WhoIs::WhoIs(Server* server) : Command(server) {}
+// WhoIs::WhoIs(Server* server) : Command(server) {}
 
-WhoIs::~WhoIs() {}
+// WhoIs::~WhoIs() {}
 
 // syntax: WHO <name>
 

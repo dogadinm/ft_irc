@@ -45,9 +45,9 @@ class Server
         int _working;
         int _socket;
 
+        const std::string _host;
         const std::string _port;
         const std::string _pass;
-        const std::string _host;
         const std::string admin_name;
         const std::string admin_pass;
 

@@ -91,13 +91,13 @@ class Topic : public Command
         void execute(Client* client, std::vector<std::string> args);
 };
 
-class WhoIs : public Command
-{
-    public:
-        WhoIs(Server* server);
-        ~WhoIs();    
-        void execute(Client* client, std::vector<std::string> args);
-};
+// class WhoIs : public Command
+// {
+//     public:
+//         WhoIs(Server* server);
+//         ~WhoIs();    
+//         void execute(Client* client, std::vector<std::string> args);
+// };
 
 
 class Invite : public Command

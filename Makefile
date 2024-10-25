@@ -4,7 +4,7 @@ SRCS = $(wildcard src/*.cpp src/network/*.cpp src/command/*.cpp)
 OBJS = $(SRCS:.cpp=.o)
 
 CC = c++
-FLAGS =  -std=c++98 # -Wall -Wextra -Werror
+FLAGS =  -Wall -Wextra -Werror -std=c++98 # -Wall -Wextra -Werror
 INCLUDES = -I ./includes
 
 RM = rm -rf

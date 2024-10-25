@@ -64,7 +64,7 @@ void Mode::execute(Client* client, std::vector<std::string> args)
             {
                 if (active)
                 {
-                    if (p < args.size())
+                    if (p < static_cast<int>(args.size()))
                     {
                         channel->set_limit(atoi(args[p].c_str()));
                         channel->broadcast(RPL_MODE(client->get_prefix(), channel->get_name(), "+l", args[p]));
@@ -87,7 +87,7 @@ void Mode::execute(Client* client, std::vector<std::string> args)
             {
                 if (active)
                 {
-                    if (p < args.size())
+                    if (p < static_cast<int>(args.size()))
                     {
                         channel->set_key(args[p]);
                         channel->broadcast(RPL_MODE(client->get_prefix(), channel->get_name(), "+k", args[p]));
@@ -108,7 +108,7 @@ void Mode::execute(Client* client, std::vector<std::string> args)
             }
             case 'o': // Operator privileges flag
             {
-                if (p < args.size())
+                if (p < static_cast<int>(args.size()))
                 {
                     Client* target = _server->get_client(args[p]);
                     if (!target)
