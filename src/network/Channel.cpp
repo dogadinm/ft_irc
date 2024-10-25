@@ -33,14 +33,15 @@ bool                        Channel::is_invite_only() const { return _i; }
 bool                        Channel::is_topic_restricted() const { return _t; }
 
 size_t                      Channel::get_size()const { return _clients.size(); }
-std::string                 Channel::get_topic() const { return _topic;}
+std::string                 Channel::get_topic() const { return _topic; }
+std::vector<Client *>       Channel::get_clients() const {return _clients ;}
 
-std::vector<std::string>    Channel::get_nicknames()
+std::vector<std::string>    Channel::get_nicknames() const
 {
     std::vector<std::string> nicknames;
 
-    client_iterator it_b = _clients.begin();
-    client_iterator it_e = _clients.end();
+    std::vector<Client *>::const_iterator it_b = _clients.begin();
+    std::vector<Client *>::const_iterator it_e = _clients.end();
 
     while (it_b != it_e)
     {

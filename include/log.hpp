@@ -51,6 +51,7 @@
 #define RPL_NOTOPIC(channel)                            "331 " + channel + ":No topic is set"
 #define RPL_TOPIC(channel, topic)                       "332 " + channel + " " + topic
 
+
 static inline void log(const std::string& message) {
     char buffer[80];
     time_t rawtime = time(NULL);

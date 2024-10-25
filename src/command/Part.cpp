@@ -1,6 +1,6 @@
 #include "../../include/command/Command.hpp"
 
-Part::Part(Server* srv) : Command(srv) {}
+Part::Part(Server* server) : Command(server) {}
 
 Part::~Part() {}
 

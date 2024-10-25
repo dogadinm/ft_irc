@@ -19,7 +19,8 @@ Parser::Parser(Server* server): _server(server)
 	_commands["PRIVMSG"] = new PrivMsg(_server);
     _commands["TOPIC"] = new Topic(_server);
 	_commands["NOTICE"] = new Notice(_server);
-    _commands["INVITE"] = new Invite(_server); 
+    _commands["INVITE"] = new Invite(_server);
+    _commands["NAMES"] = new Names(_server); 
 }
 
 Parser::~Parser()

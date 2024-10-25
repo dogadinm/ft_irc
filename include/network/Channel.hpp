@@ -61,7 +61,8 @@ class Channel
         bool                        is_invite_only() const;
         bool                        is_topic_restricted() const;
         size_t                      get_size() const;
-        std::vector<std::string>    get_nicknames();
+        std::vector<std::string>    get_nicknames() const;
+        std::vector<Client *>       get_clients() const; 
 
 
         /* Setters */

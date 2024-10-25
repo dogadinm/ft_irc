@@ -99,6 +99,13 @@ class Invite : public Command
         void execute(Client* client, std::vector<std::string> args);
 };
 
+class Names : public Command
+{
+    public:
+        Names(Server* server);
+        ~Names();    
+        void execute(Client* client, std::vector<std::string> args);
+};
 
 
 class Ping : public Command
