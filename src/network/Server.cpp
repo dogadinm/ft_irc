@@ -43,14 +43,27 @@ int Server::CreateSocket()
 
     return server_fd; 
 }
+Server* Server::_instance = NULL;
+
+void Server::signalHandler(int signal) {
+    if (signal == SIGINT) {
+        std::cout << "Received SIGINT. Shutting down server..." << std::endl;
+        if (_instance) {
+            _instance->stop(); // Set the working flag to false
+        }
+    }
+}
 
 void Server::start()
 {
+    _instance = this;
+
+    // Set up the signal handler for SIGINT
+    signal(SIGINT, signalHandler);
     pollfd srv = {_socket, POLLIN, 0};
     _plfds.push_back(srv);
 
     log("Server listening on port " + _port);
-
     while (_working)
     {
         if (poll(_plfds.data(), _plfds.size(), -1) < 0)
@@ -213,13 +226,28 @@ std::string Server::read_message(int fd)
 
 Server::~Server()
 {
-    if (_socket >= 0) 
-        close(_socket);
+    // if (_socket >= 0) 
+    //     close(_socket);
+    // std::map<int, Client *> _clients;
+    // for(client_iterator it = _clients.begin(); it != _clients.end(); ++it)
+    // {
+    //     delete it->second;
+    // }
+    // // for (size_t i = 0; i < _channels.size(); i++)
+    // // _clients.clear();
+    // // delete _clients[i];
 
-    for (size_t i = 0; i < _channels.size(); i++)
-        delete _clients[i];
-
-    delete _parser;
+    // delete _parser;
+    for (client_iterator it = _clients.begin(); it != _clients.end(); ++it) {
+        delete it->second; // Delete each dynamically allocated Client
+    }
+    _clients.clear(); // Clear the map
+    for (channel_iterator it = _channels.begin(); it != _channels.end(); ++it){
+        delete *it; // Delete each dynamically allocated Channel
+    }
+    _channels.clear(); // Clear the vector
+    delete _parser; // Delete the parser if it was created
+    std::cout << "Server stopped" << std::endl;
 }
 
 
@@ -282,6 +310,10 @@ void Server::remove_channel(Channel* channel)
         }
     }
 
+}
+
+void Server::stop() {
+    _working = false;
 }
 
 

@@ -12,6 +12,7 @@
 #include <stdexcept>
 #include <fcntl.h>
 #include <string>
+#include <signal.h>
 
 
 #include <algorithm>
@@ -42,7 +43,7 @@ class Server
         typedef std::vector<Channel *>::iterator    channel_iterator;
 
     private:
-        int _working;
+        bool _working;
         int _socket;
 
         const std::string _host;
@@ -50,12 +51,14 @@ class Server
         const std::string _pass;
         const std::string admin_name;
         const std::string admin_pass;
+        static Server* _instance;
 
         std::vector<pollfd> _plfds;
         std::vector<Channel *>  _channels;
         std::map<int, Client *> _clients;
 
         Parser*                 _parser;
+        
 
         Server();
         Server(Server const & copy);
@@ -92,5 +95,7 @@ class Server
 
         std::string     read_message(int fd);
         void            remove_channel(Channel* channel);
+        void stop();
+        static void signalHandler(int signal);
 };
 

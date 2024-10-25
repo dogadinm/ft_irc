@@ -71,6 +71,7 @@ void Parser::invoke(Client* client, const std::string& message)
                 return;
             }
             cmd->execute(client, args);
+            delete cmd;
             
         }
         catch(const std::exception& e)

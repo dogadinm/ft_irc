@@ -51,7 +51,7 @@
 #define RPL_NOTOPIC(channel)                            "331 " + channel + ":No topic is set"
 #define RPL_TOPIC(channel, topic)                       "332 " + channel + " " + topic
 
-#define RPL_WHOISUSER(source, nickname, username, host, realname) "311 " + source + " " + nickname + " "+ username + " "+ host + " * : "realname
+#define RPL_WHOISUSER(source, nickname, username, host, realname) "311 " + source + " " + nickname + " "+ username + " "+ host + " * : " +realname
 
 static inline void log(const std::string& message) {
     char buffer[80];
