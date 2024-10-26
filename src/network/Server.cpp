@@ -11,6 +11,27 @@ std::string     Server::get_admin_name() { return admin_name; }
 std::string     Server::get_admin_pass() { return admin_pass; }
 std::string     Server::get_pass() const    { return _pass; }
 
+Client*         Server::get_client(const std::string& nickname)
+{
+    for (client_iterator it = _clients.begin(); it != _clients.end(); ++it){
+        if (!nickname.compare(it->second->get_nickname()))
+            return it->second; 
+    }
+    return NULL;
+}
+
+Channel*        Server::get_channel(const std::string& name)
+{
+    for (channel_iterator it = _channels.begin(); it != _channels.end(); ++it){
+        if (*it == NULL)
+            continue;
+        if (!name.compare((*it)->get_name()))
+            return (*it);
+    }
+    return NULL;
+}
+
+
 void            Server::stop() { _working = false;}
 Server*         Server::_instance = NULL;
 
@@ -76,9 +97,8 @@ void Server::start()
             throw std::runtime_error("Error, polling!");
         for (plfds_iterator it = _plfds.begin(); it != _plfds.end(); ++it)
         {
-            if (it->revents == 0) {
+            if (it->revents == 0)
                 continue;
-            }
             if (it->revents & POLLHUP || it->revents & POLLRDHUP){
                 client_disconnect(it->fd);
                 break;  
@@ -183,46 +203,22 @@ std::string Server::read_message(int fd)
         }
         buffer[bytes_read] = '\0';
         message.append(buffer);
-        
     }
     return message;
 }
 
 Server::~Server()
 {
-    for (client_iterator it = _clients.begin(); it != _clients.end(); ++it) {
+    for (client_iterator it = _clients.begin(); it != _clients.end(); ++it)
         delete it->second;
-    }
     _clients.clear();
 
-    for (channel_iterator it = _channels.begin(); it != _channels.end(); ++it){
+    for (channel_iterator it = _channels.begin(); it != _channels.end(); ++it)
         delete *it;
-    }
     _channels.clear();
 
     delete _parser;
     std::cout << "Server stopped" << std::endl;
-}
-
-Client*         Server::get_client(const std::string& nickname)
-{
-    
-    for (client_iterator it = _clients.begin(); it != _clients.end(); ++it){
-        if (!nickname.compare(it->second->get_nickname()))
-            return it->second; 
-    }
-    return NULL;
-}
-
-Channel*        Server::get_channel(const std::string& name)
-{
-    for (channel_iterator it = _channels.begin(); it != _channels.end(); ++it){
-        if (*it == NULL) // Check NULL
-            continue;
-        if (!name.compare((*it)->get_name()))
-            return (*it);
-    }
-    return NULL;
 }
 
 Channel*        Server::create_channel(const std::string& name, const std::string& key, Client* client)
@@ -231,16 +227,6 @@ Channel*        Server::create_channel(const std::string& name, const std::strin
     _channels.push_back(channel);
 
     return channel;
-}
-
-void Server::broadcast(const std::string& message)
-{
-    int fd_cln;
-    for (client_iterator it = _clients.begin(); it != _clients.end(); ++it){
-        fd_cln = it->second->get_fd();
-        if (send(fd_cln, message.c_str(), message.length(), 0) < 0)
-            throw std::runtime_error("Error send a message from server!");
-    }
 }
 
 void Server::remove_channel(Channel* channel)
@@ -253,3 +239,14 @@ void Server::remove_channel(Channel* channel)
     }
     delete channel;
 }
+
+void Server::broadcast(const std::string& message)
+{
+    int fd_cln;
+    for (client_iterator it = _clients.begin(); it != _clients.end(); ++it){
+        fd_cln = it->second->get_fd();
+        if (send(fd_cln, message.c_str(), message.length(), 0) < 0)
+            throw std::runtime_error("Error send a message from server!");
+    }
+}
+

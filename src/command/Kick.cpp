@@ -24,9 +24,7 @@ void Kick::execute(Client* client, std::vector<std::string> args)
     {
         reason = args[2].substr(1); // Remove leading ':'
         for (size_t i = 3; i < args.size(); i++)  // Append remaining words
-        {
             reason.append(" " + args[i]);
-        }
     }
 
     // Retrieve the channel from the server
@@ -65,17 +63,14 @@ void Kick::execute(Client* client, std::vector<std::string> args)
         client->reply(ERR_USERNOTINCHANNEL(client->get_nickname(), dest->get_nickname(), channel_name));
         return;
     }
-    // channel->broadcast(dest->get_nickname() + " has been kicked from the channel by " + client->get_nickname() + ". Reason: " + reason);
-    // If everything is valid, kick the target client
+    // Kick the target client
     channel->kick(client, dest, reason);
     dest->remove_channel(channel);
 
     // Notify all clients in the channel about the kick
-    
     if (channel->get_size() == 0)
     {
         _server->remove_channel(channel);
         log(channel->get_name() + " closed");
     }
-    // delete dest;
 }

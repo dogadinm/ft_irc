@@ -24,23 +24,23 @@ Client::~Client()
 
 /* Getters */
 
-int             Client::get_fd() const { return _fd; }
-std::string     Client::get_port() const { return _port; }  // Returning port as std::string
+int                         Client::get_fd() const { return _fd; }
+int                         Client::get_channel_count() const { return _channels.size(); }
+bool                        Client::get_admin_access() const {return _admin_access; }
 
-std::string     Client::get_nickname() const { return _nickname; }
-std::string     Client::get_username() const { return _username; }
-std::string     Client::get_realname() const { return _realname; }
-std::string     Client::get_hostname() const { return _hostname; }
-ClientState     Client::get_state() const { return _state; }
-bool            Client::get_admin_access() const {return _admin_access; }
-std::vector<Channel *> Client::get_channels() const { return _channels; }
+std::string                 Client::get_port() const { return _port; }
+std::string                 Client::get_nickname() const { return _nickname; }
+std::string                 Client::get_username() const { return _username; }
+std::string                 Client::get_realname() const { return _realname; }
+std::string                 Client::get_hostname() const { return _hostname; }
+ClientState                 Client::get_state() const { return _state; }
+std::vector<Channel *>      Client::get_channels() const { return _channels; }
 
 std::string     Client::get_prefix() const
 {
     std::string username = _username.empty() ? "" : "!" + _username;
     std::string hostname = _hostname.empty() ? "" : "@" + _hostname;
     std::string nickname = _admin_access ? "@" + _nickname : _nickname;
-
     return nickname + username + hostname;
 }
 
@@ -48,15 +48,13 @@ Channel*        Client::get_channel(std::string name) const
 {
     for (std::vector<Channel *>::const_iterator  it = _channels.begin(); it != _channels.end(); ++it)
     {
-        if (*it == NULL) // Check NULL
+        if (*it == NULL)
             continue;
         if (!name.compare((*it)->get_name()))
             return (*it);
     }
     return NULL;
-
 }
-
 
 /* Setters */
 
@@ -107,7 +105,6 @@ void            Client::welcome()
 
 /* Client Actions */
 
-
 void Client::join(Channel* channel)
 {
     // Check if already in the channel
@@ -148,48 +145,18 @@ void Client::leave(Channel* channel)
         log(_nickname + " has left the channel " + channel->get_name());
     }
 }
-// void Client::leave_all_channels()
-// {
-        
-//     // for (std::vector<Channel*>::iterator it = _channels.begin(); it != _channels.end(); ++it)
-//     // {
-        
-//     //     Channel* channel = *it;
-//     //     std::cout << *it << std::endl;   
-//     // }
-    
-//     for (std::vector<Channel*>::iterator it = _channels.begin(); it != _channels.end(); ++it)
-//     {
-
-//         Channel* channel = *it;
-
-//         channel->remove_client(this);
-
-//         channel->broadcast(RPL_PART(get_prefix(), channel->get_name()));
-
-//         log(_nickname + " has left the channel " + channel->get_name());
-
-//         _channels.erase(it);
-
-//     }
-// }
 
 void Client::leave_all_channels()
 {
     for (std::vector<Channel*>::iterator it = _channels.begin(); it != _channels.end(); ++it)
     {
         Channel* channel = *it;  
-        channel->broadcast(RPL_PART(get_prefix(), channel->get_name()));  // Уведомить канал
+        channel->broadcast(RPL_PART(get_prefix(), channel->get_name()));
         log(_nickname + " has left the channel " + channel->get_name());
         channel->remove_client(this);
     }
     _channels.clear();
 
-}
-
-int Client::get_channel_count() const
-{
-    return _channels.size();  // Return the number of channels the client is in
 }
 
 void Client::remove_channel(Channel* channel)
