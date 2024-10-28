@@ -20,7 +20,8 @@ Parser::Parser(Server* server): _server(server)
     _commands["TOPIC"] = new Topic(_server);
 	_commands["NOTICE"] = new Notice(_server);
     _commands["INVITE"] = new Invite(_server);
-    _commands["NAMES"] = new Names(_server); 
+    _commands["NAMES"] = new Names(_server);
+    _commands["LIST"] = new List(_server);
 }
 
 Parser::~Parser()

@@ -48,10 +48,16 @@
 #define RPL_QUIT(source, message)                       ":" + source + " QUIT :Quit: " + message
 #define RPL_KICK(source, channel, target, reason)       ":" + source + " KICK " + channel + " " + target + " :" + reason
 #define RPL_MODE(source, channel, modes, args)          ":" + source + " MODE " + channel + " " + modes + " " + args
-#define RPL_NOTOPIC(channel)                            "331 " + channel + ":No topic is set"
+#define RPL_NOTOPIC(channel)                            "331 " + channel + " :No topic is set"
 #define RPL_TOPIC(channel, topic)                       "332 " + channel + " " + topic
 
 #define RPL_WHOISUSER(source, nickname, username, host, realname) "311 " + source + " " + nickname + " "+ username + " "+ host + " * : " +realname
+
+
+
+#define RPL_LISTSTART(source)                       "321 " + source + " :Channel :Users  Name"
+#define RPL_LIST(source, channel, users, topic)     "322 " + source + " " + channel + " " + users + ": " + topic
+#define RPL_LISTEND(source, server)                 "322 " + source + " " + server + " :End of /LIST"
 
 static inline void log(const std::string& message) {
     char buffer[80];

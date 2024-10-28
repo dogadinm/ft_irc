@@ -1,19 +1,24 @@
 #include "../../include/network/Server.hpp"
 
-Server::Server(const std::string &port, const std::string &pass) : _host("127.0.0.1"), _port(port), _pass(pass), admin_name("dogadinm"), admin_pass("12345")
+Server::Server(const std::string &port, const std::string &pass) : 
+    _host("127.0.0.1"), _port(port), _pass(pass), _admin_name("dogadinm"), _admin_pass("12345"), _server_name("IRC_42")
 {
     _working = 1;
     _socket = CreateSocket();
     _parser = new Parser(this);
 }
 
-std::string     Server::get_admin_name() { return admin_name; }
-std::string     Server::get_admin_pass() { return admin_pass; }
-std::string     Server::get_pass() const    { return _pass; }
+std::string             Server::get_admin_name() const  { return _admin_name; }
+std::string             Server::get_admin_pass() const  { return _admin_pass; }
+std::string             Server::get_server_name() const { return _server_name; }
+std::string             Server::get_pass() const        { return _pass; }
+std::vector<Channel *>  Server::get_channels() const    { return _channels; }
 
 Client*         Server::get_client(const std::string& nickname)
 {
     for (client_iterator it = _clients.begin(); it != _clients.end(); ++it){
+        if (it->second == NULL)
+            continue;
         if (!nickname.compare(it->second->get_nickname()))
             return it->second; 
     }

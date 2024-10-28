@@ -46,14 +46,15 @@ class Server
         bool _working;
         int _socket;
 
-        const std::string _host;
-        const std::string _port;
-        const std::string _pass;
-        const std::string admin_name;
-        const std::string admin_pass;
-        static Server* _instance;
+        const std::string   _host;
+        const std::string   _port;
+        const std::string   _pass;
+        const std::string   _admin_name;
+        const std::string   _admin_pass;
+        const std::string   _server_name;
+        static Server*      _instance;
 
-        std::vector<pollfd> _plfds;
+        std::vector<pollfd>     _plfds;
         std::vector<Channel *>  _channels;
         std::map<int, Client *> _clients;
 
@@ -76,12 +77,14 @@ class Server
         int CreateSocket();
 
         // Getters
-        std::string     get_pass() const;
-        Client*         get_client(const std::string &nickname);
-        Channel*        get_channel(const std::string& name);
-        std::string     get_admin_name();
-        std::string     get_admin_pass();
-
+        
+        Client*                 get_client(const std::string &nickname);
+        Channel*                get_channel(const std::string& name);
+        std::string             get_pass() const;
+        std::string             get_admin_name() const;
+        std::string             get_admin_pass() const;
+        std::string             get_server_name() const;
+        std::vector<Channel *>  get_channels() const;
 
         // Handle Clients
         void            client_connect();
@@ -95,7 +98,7 @@ class Server
 
         std::string     read_message(int fd);
         void            remove_channel(Channel* channel);
-        void stop();
+        void            stop();
         static void signalHandler(int signal);
 };
 

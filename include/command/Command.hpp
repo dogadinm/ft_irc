@@ -98,6 +98,13 @@ class Topic : public Command
 //         ~WhoIs();    
 //         void execute(Client* client, std::vector<std::string> args);
 // };
+class List : public Command
+{
+    public:
+        List(Server* server);
+        ~List();    
+        void execute(Client* client, std::vector<std::string> args);
+};
 
 
 class Invite : public Command
