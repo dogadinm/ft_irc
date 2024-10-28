@@ -22,6 +22,7 @@ Parser::Parser(Server* server): _server(server)
     _commands["INVITE"] = new Invite(_server);
     _commands["NAMES"] = new Names(_server);
     _commands["LIST"] = new List(_server);
+    _commands["WHOIS"] = new WhoIs(_server);
 }
 
 Parser::~Parser()
@@ -29,8 +30,6 @@ Parser::~Parser()
     for (comm_iter it = _commands.begin(); it != _commands.end(); ++it)
         delete it->second;
 }
-
-
 
 std::string     Parser::trim(const std::string& str)
 {

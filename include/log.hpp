@@ -66,3 +66,8 @@ static inline void log(const std::string& message) {
 
     std::cout << "\033[0;34m[" << buffer << "]\033[0m " << message << std::endl;
 }
+
+#define RPL_WHOISCHANNELS(source , user, channels)      "319 " + source + " " + user + " :" + channels
+#define RPL_WHOISSERVER(source , user, server, info)    "312 " + source + " " + user +  " :" + server + " :" + info
+#define RPL_WHOISOPERATOR(source , user)                "313 " + source + " " + user + " :is an IRC operator"
+#define RPL_ENDOFWHOIS(source , user)                   "318 " + source + " " + user + " :End of /WHOIS list"

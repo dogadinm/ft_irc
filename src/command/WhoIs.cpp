@@ -1,55 +1,46 @@
+#include "../../include/command/Command.hpp"
 
+WhoIs::WhoIs(Server* server) : Command(server) {}
 
-// #include "../../include/command/Command.hpp"
+WhoIs::~WhoIs() {}
 
-// WhoIs::WhoIs(Server* server) : Command(server) {}
+//syntax: WHOIS <name>
 
-// WhoIs::~WhoIs() {}
+void WhoIs::execute(Client* client, std::vector<std::string> args)
+{
+    if (args.empty())
+    {
+        client->reply(ERR_NEEDMOREPARAMS(client->get_nickname(), "WHOIS"));
+        return;
+    }
 
-// syntax: WHO <name>
+    std::string targetNickname = args[0];
+    Client* target = _server->get_client(targetNickname);
 
-// void WhoIs::execute(Client* client, std::vector<std::string> args)
-// {
-//     // Проверяем, передан ли никнейм для whois
-//     if (args.empty())
-//     {
-//         client->reply(ERR_NEEDMOREPARAMS(client->get_nickname(), "WHOIS"));
-//         return;
-//     }
+    if (!target)
+    {
+        client->reply(ERR_NOSUCHNICK(client->get_nickname(), targetNickname));
+        return;
+    }
 
-//     // Получаем целевой никнейм и проверяем его существование
-//     std::string targetNickname = args[0];
-//     Client* target = _server->get_client(targetNickname);
+    client->reply(RPL_WHOISUSER(client->get_nickname(), target->get_nickname(), target->get_username(),  target->get_hostname(), target->get_realname()));
 
-//     if (!target)
-//     {
-//         client->reply(ERR_NOSUCHNICK(client->get_nickname(), targetNickname));
-//         return;
-//     }
+    std::string channels;
+    std::vector<Channel*> chnnls = target->get_channels();
+    for (std::vector<Channel*>::iterator it = chnnls.begin(); it != chnnls.end(); ++it)
+    {
+        bool oper = target->get_channel((*it)->get_name())->get_admin(target->get_nickname());
+        channels += oper ? "@" +  (*it)->get_name() + " " : "+" + (*it)->get_name() + " ";
+    }
+    client->reply(RPL_WHOISCHANNELS(client->get_nickname(), target->get_nickname(), channels));
+    client->reply(RPL_WHOISSERVER(client->get_nickname(), target->get_nickname(), _server->get_server_name(), "no server info"));
 
-//     // Если пользователь найден, отправляем подробную информацию о нем
+    if(target->get_admin_access())
+        client->reply(RPL_WHOISOPERATOR(client->get_nickname(), target->get_nickname()));
+    // // Отмечаем, как долго целевой клиент неактивен
+    // client->reply( " 317 " + client->get_nickname() + " " + 
+    //              target->get_nickname() + " " + std::to_string(target->get_idle_time()) + 
+    //              " :seconds idle");
 
-//     client->reply(RPL_WHOISUSER(client->get_nickname(), target->get_nickname(), target->get_username(),  target->get_hostname(), target->get_realname()));
-
-//     // Выводим список каналов, в которых находится целевой пользователь
-//     std::string channels;
-//     for (std::vector<Channel*>::iterator it = target->get_channels().begin(); it != target->get_channels().end(); ++it)
-//     {
-//         channels += (*it)->get_name() + " ";
-//     }
-//     client->reply( " 319 " + client->get_nickname() + " " + 
-//                  target->get_nickname() + " :" + channels);
-
-//     // Выводим сервер и его адрес
-//     client->reply( " 312 " + client->get_nickname() + " " + 
-//                  target->get_nickname() + " " + _server->get_name() + " :Server info");
-
-//     // Отмечаем, как долго целевой клиент неактивен
-//     client->reply( " 317 " + client->get_nickname() + " " + 
-//                  target->get_nickname() + " " + std::to_string(target->get_idle_time()) + 
-//                  " :seconds idle");
-
-//     // Завершаем ответ на команду WHOIS
-//     client->reply( " 318 " + client->get_nickname() + " " + 
-//                  target->get_nickname() + " :End of WHOIS list");
-// }
+    client->reply(RPL_ENDOFWHOIS(client->get_nickname(), target->get_nickname()));
+}
