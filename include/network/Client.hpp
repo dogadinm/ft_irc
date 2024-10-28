@@ -18,6 +18,7 @@
 
 #include <string>
 #include <vector>
+#include <ctime>
 
 class Client;
 
@@ -51,6 +52,7 @@ class Client
 
         ClientState     _state;
         std::vector<Channel *>  _channels;
+        time_t  lastActivityTime;
 
         Client();
         Client(const Client &src);
@@ -109,6 +111,8 @@ class Client
 
         void            remove_channel(Channel* channel);
         int             get_channel_count() const;
+        double          get_idle_time() const;
+        void            update_activity();
 };
 
 #endif

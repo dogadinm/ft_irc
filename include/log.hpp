@@ -52,7 +52,11 @@
 #define RPL_TOPIC(channel, topic)                       "332 " + channel + " " + topic
 
 #define RPL_WHOISUSER(source, nickname, username, host, realname) "311 " + source + " " + nickname + " "+ username + " "+ host + " * : " +realname
-
+#define RPL_WHOISCHANNELS(source , nick, channels)      "319 " + source + " " + nick + " :" + channels
+#define RPL_WHOISSERVER(source , nick, server, info)    "312 " + source + " " + nick +  " :" + server + " :" + info
+#define RPL_WHOISOPERATOR(source , nick)                "313 " + source + " " + nick + " :is an IRC operator"
+#define RPL_ENDOFWHOIS(source , nick)                   "318 " + source + " " + nick + " :End of /WHOIS list"
+#define RPL_WHOISIDLE(source, nick, seconds)            "317 " + source + " " + nick + " " + seconds + " :seconds idle"
 
 
 #define RPL_LISTSTART(source)                       "321 " + source + " :Channel :Users  Name"
@@ -67,7 +71,3 @@ static inline void log(const std::string& message) {
     std::cout << "\033[0;34m[" << buffer << "]\033[0m " << message << std::endl;
 }
 
-#define RPL_WHOISCHANNELS(source , user, channels)      "319 " + source + " " + user + " :" + channels
-#define RPL_WHOISSERVER(source , user, server, info)    "312 " + source + " " + user +  " :" + server + " :" + info
-#define RPL_WHOISOPERATOR(source , user)                "313 " + source + " " + user + " :is an IRC operator"
-#define RPL_ENDOFWHOIS(source , user)                   "318 " + source + " " + user + " :End of /WHOIS list"

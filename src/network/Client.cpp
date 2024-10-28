@@ -5,7 +5,7 @@
 /* Constructor and Destructor */
 
 Client::Client(int fd, const std::string &port, const std::string &hostname)  // port as std::string
-    : _fd(fd), _port(port),_admin_access(false), _hostname(hostname), _state(UNAUTHENTICATED), _channels(0) //, _channel(NULL)
+    : _fd(fd), _port(port),_admin_access(false), _hostname(hostname), _state(UNAUTHENTICATED), _channels(0), lastActivityTime(std::time(0))
 {
 
 }
@@ -171,4 +171,13 @@ void Client::remove_channel(Channel* channel)
             _channels.erase(it_b);
         it_b++;
     }
+}
+
+double Client::get_idle_time() const {
+    return std::difftime(std::time(0), lastActivityTime); // Calculate idle time
+}
+
+
+void Client::update_activity() {
+   lastActivityTime = std::time(0);
 }

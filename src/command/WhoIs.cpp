@@ -37,10 +37,11 @@ void WhoIs::execute(Client* client, std::vector<std::string> args)
 
     if(target->get_admin_access())
         client->reply(RPL_WHOISOPERATOR(client->get_nickname(), target->get_nickname()));
-    // // Отмечаем, как долго целевой клиент неактивен
-    // client->reply( " 317 " + client->get_nickname() + " " + 
-    //              target->get_nickname() + " " + std::to_string(target->get_idle_time()) + 
-    //              " :seconds idle");
+
+    std::stringstream ss;
+    ss << target->get_idle_time();
+    std::string idle = ss.str();
+    client->reply(RPL_WHOISIDLE(client->get_nickname(), client->get_nickname(), idle));
 
     client->reply(RPL_ENDOFWHOIS(client->get_nickname(), target->get_nickname()));
 }

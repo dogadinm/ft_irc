@@ -181,7 +181,8 @@ void Server::client_message(int fd)
     try{
         if (_clients.find(fd) == _clients.end())
             return;
-        Client*     client = _clients.at(fd);     
+        Client*     client = _clients.at(fd);
+        client->update_activity();
         std::string message = this->read_message(fd);       
         _parser->invoke(client, message);
     }
