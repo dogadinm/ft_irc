@@ -150,10 +150,11 @@ void Client::leave_all_channels()
 {
     for (std::vector<Channel*>::iterator it = _channels.begin(); it != _channels.end(); ++it)
     {
-        Channel* channel = *it;  
+        Channel* channel = *it;
+     
+        channel->remove_client(this);
         channel->broadcast(RPL_PART(get_prefix(), channel->get_name()));
         log(_nickname + " has left the channel " + channel->get_name());
-        channel->remove_client(this);
     }
     _channels.clear();
 

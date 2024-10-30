@@ -11,12 +11,9 @@ void List::execute(Client* client, std::vector<std::string> args)
     // Notify that the LIST command has started
     if (!args.empty()){
         std::string channelName = args[0];
-        std::cout << "hekllo012314" << std::endl;
         Channel* channel = _server->get_channel(channelName);
-        std::cout << "hekllo05" << std::endl;
         if (channel)
         {
-            std::cout << "hekllo0123" << std::endl;
             client->reply(RPL_LISTSTART(client->get_nickname()));
             // Count number of users in the channel
             std::stringstream ss;

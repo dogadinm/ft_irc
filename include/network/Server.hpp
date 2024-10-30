@@ -85,7 +85,7 @@ class Server
         std::string             get_admin_pass() const;
         std::string             get_server_name() const;
         std::vector<Channel *>  get_channels() const;
-
+        std::map<int, Client *> get_clients() const;
         // Handle Clients
         void            client_connect();
         void            client_disconnect(int fd);

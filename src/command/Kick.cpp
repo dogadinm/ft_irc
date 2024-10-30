@@ -70,7 +70,7 @@ void Kick::execute(Client* client, std::vector<std::string> args)
     // Notify all clients in the channel about the kick
     if (channel->get_size() == 0)
     {
-        _server->remove_channel(channel);
         log(channel->get_name() + " closed");
+        _server->remove_channel(channel);  
     }
 }

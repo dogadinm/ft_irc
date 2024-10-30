@@ -181,5 +181,12 @@ class User : public Command
         void execute(Client* client, std::vector<std::string> args);
 };
 
+class Who : public Command
+{
+    public:
+        Who(Server* server);
+        ~Who();    
+        void execute(Client* client, std::vector<std::string> args);
+};
 
 

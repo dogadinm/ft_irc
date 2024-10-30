@@ -37,7 +37,7 @@ void Part::execute(Client* client, std::vector<std::string> args)
     // If the channel is empty after the client leaves, remove the channel (optional)
     if (channel->get_size() == 0)
     {
-        _server->remove_channel(channel);
         log(channel->get_name() + " closed");
+        _server->remove_channel(channel);
     }
 }

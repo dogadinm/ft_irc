@@ -13,6 +13,7 @@ std::string             Server::get_admin_pass() const  { return _admin_pass; }
 std::string             Server::get_server_name() const { return _server_name; }
 std::string             Server::get_pass() const        { return _pass; }
 std::vector<Channel *>  Server::get_channels() const    { return _channels; }
+std::map<int, Client *> Server::get_clients() const     { return _clients; }
 
 Client*         Server::get_client(const std::string& nickname)
 {
@@ -183,7 +184,7 @@ void Server::client_message(int fd)
             return;
         Client*     client = _clients.at(fd);
         client->update_activity();
-        std::string message = this->read_message(fd);       
+        std::string message = this->read_message(fd);    
         _parser->invoke(client, message);
     }
     catch (const std::exception& e) {

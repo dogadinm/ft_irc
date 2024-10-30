@@ -4,7 +4,7 @@ Names::Names(Server* server) : Command(server) {}
 
 Names::~Names() {}
 
-// syntax: NAMES <channels> 
+// syntax: NAMES <channel> 
 
 void Names::execute(Client* client, std::vector<std::string> args)
 {

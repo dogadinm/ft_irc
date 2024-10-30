@@ -46,8 +46,8 @@ void Kill::execute(Client* client, std::vector<std::string> args)
         Channel* channel = *it;
         if (channel->get_size() == 0)
         {
-            _server->remove_channel(channel);
             log(channel->get_name() + " closed");
+            _server->remove_channel(channel);      
         }
             
     }

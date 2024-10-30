@@ -23,6 +23,7 @@ Parser::Parser(Server* server): _server(server)
     _commands["NAMES"] = new Names(_server);
     _commands["LIST"] = new List(_server);
     _commands["WHOIS"] = new WhoIs(_server);
+    _commands["WHO"] = new Who(_server);
 }
 
 Parser::~Parser()
@@ -60,7 +61,6 @@ void Parser::invoke(Client* client, const std::string& message)
         try
         {
             Command *cmd = _commands.at(name);
-
             while (line >> buf)
                 args.push_back(buf);
 
@@ -72,7 +72,6 @@ void Parser::invoke(Client* client, const std::string& message)
             }
             cmd->execute(client, args);
             // delete cmd;
-            
         }
         catch(const std::exception& e)
         {
@@ -80,4 +79,3 @@ void Parser::invoke(Client* client, const std::string& message)
         }     
     }
 }
-
