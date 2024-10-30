@@ -210,6 +210,7 @@ std::string Server::read_message(int fd)
         }
         buffer[bytes_read] = '\0';
         message.append(buffer);
+        std::cout << message << std::endl;
     }
     return message;
 }
