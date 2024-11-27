@@ -52,4 +52,4 @@ To connect to the server, you can use:
     "USER <username> 0 * :<realname>"
 
   - You can also use an IRC Client e.g IRSSI
-    -to connect with IRSSI: "/connect <IP ADDRESS> <PORT> <PASSWORD> <NICKNAME>"
+    -to connect with IRSSI: "`/connect <IP ADDRESS> <PORT> <PASSWORD> <NICKNAME>`"
