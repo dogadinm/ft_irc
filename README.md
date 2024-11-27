@@ -47,9 +47,10 @@ To connect to the server, you can use:
     - **IP ADDRESS**: Host IP address.
     - **PORT**: The PORT that the server listening on.
   - to register:
-    "PASS <pass>"
-    "NICK <nickname>"
-    "USER <username> 0 * :<realname>"
+    `"PASS <pass>"`
+    `"NICK <nickname>"`
+    `"USER <username> 0 * :<realname>"`
 
   - You can also use an IRC Client e.g IRSSI
-    -to connect with IRSSI: "`/connect <IP ADDRESS> <PORT> <PASSWORD> <NICKNAME>`"
+  - to connect with IRSSI:
+      "`/connect <IP ADDRESS> <PORT> <PASSWORD> <NICKNAME>`"
